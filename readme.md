@@ -3,7 +3,7 @@
 ## 📌 Descrição
 Curso de Programação em Python focado no desenvolvimento de aplicações práticas, abordando lógica de programação, algoritmos, estruturas da linguagem, manipulação de dados, arquivos, testes e noções de jogos 2D. Prioriza boas práticas, raciocínio lógico e resolução de problemas em projetos reais.
 
-## 🎯 Objetivo
+## 🎯 Objetivo 
 Capacitar o aluno a desenvolver aplicações em Python utilizando boas práticas de programação, desde a análise do problema até a validação do software.
 
 ## 📚 Conteúdos Abordados
