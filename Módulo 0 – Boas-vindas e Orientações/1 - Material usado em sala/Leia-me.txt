@@ -1,0 +1,8 @@
+
+Sejam bem-vindos ao curso de Programação em Python!
+
+Neste curso, você vai aprender a desenvolver soluções práticas utilizando Python, com foco em automatizar tarefas do dia a dia e aumentar sua produtividade.
+
+Nosso objetivo é que você consiga aplicar o que aprender diretamente no seu trabalho.
+
+Prepare-se para colocar a mão na massa 🚀

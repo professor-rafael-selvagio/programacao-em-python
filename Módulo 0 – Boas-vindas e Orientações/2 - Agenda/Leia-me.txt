@@ -1,0 +1,18 @@
+O curso está organizado em módulos progressivos:
+
+🔹 Módulo 1 – Fundamentos essenciais  
+🔹 Módulo 2 – Python na prática  
+🔹 Módulo 3 – Estruturas de controle  
+🔹 Módulo 4 – IA aplicada  
+🔹 Módulo 5 – Automação  
+🔹 Módulo 6 – Projeto real  
+
+📅 Dias das aulas: Segundas e Quartas-feiras
+
+⏰ Horário: das 13h às 17h
+
+📍 Formato / Local: Presencial - Endereço: Av. São Carlos, 1800 - Centro, São Carlos - SP, 13560-001
+
+O conteúdo foi planejado para evoluir do básico até a aplicação prática no seu dia a dia, com aulas expositivas e práticas.
+
+Recomenda-se chegar no horário e acompanhar todas as aulas para melhor aproveitamento do curso.

@@ -1,0 +1,27 @@
+Antes de começarmos a programar, é importante preparar o ambiente de desenvolvimento.
+
+Neste curso, utilizaremos:
+
+- Python (linguagem de programação)
+- Visual Studio Code (VS Code)
+
+Durante essa etapa, você irá:
+
+✔️ Instalar o Python  
+✔️ Instalar o VS Code  
+✔️ Configurar o ambiente para desenvolvimento  
+
+Também iremos adicionar algumas extensões importantes no VS Code, como:
+
+- Python (Microsoft)  
+- Pylance  
+- Python Debugger  
+- Code Runner  
+- Error Lens  
+
+Além disso, utilizaremos o Codex (ChatGPT no VS Code), que permite:
+
+- Gerar código automaticamente  
+- Explicar trechos de código  
+- Ajudar na correção de erros  
+- Acelerar o desenvolvimento

@@ -1,0 +1,9 @@
+Ao término do curso, o aluno que atender aos critérios estabelecidos receberá o certificado de conclusão de Programação em Python.
+
+Para obtenção do certificado, será necessário:
+
+✔️ Frequência nas aulas  
+✔️ Realização das atividades propostas  
+✔️ Desenvolvimento do projeto final  
+
+A certificação está condicionada ao desempenho e participação ao longo do curso.
