@@ -1,0 +1,9 @@
+Lista de atividades - Estrutura de repetição WHILE
+
+1 - Mostre na tela os números de 1 a 10 utilizando a estrutura de repetição while.
+
+2 - Solicite números inteiros ao usuário até que ele digite 0. Ao final, mostre a soma de todos os números informados, sem incluir o zero.
+
+3 - Crie um programa que solicite uma senha ao usuário. Ele terá no máximo 3 tentativas para informar a senha correta, que será "python123". Ao acertar, mostre "Acesso autorizado". Se errar as 3 tentativas, mostre "Acesso bloqueado".
+
+4 - Crie um programa que exiba um menu com as opções "1 - Ver saldo", "2 - Depositar" e "0 - Sair". O programa deverá repetir o menu até que o usuário escolha sair. O saldo inicial será R$ 0,00. Ao depositar, solicite o valor e atualize o saldo.

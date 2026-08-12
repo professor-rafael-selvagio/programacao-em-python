@@ -1,0 +1,8 @@
+LIsta de atividade
+
+1 - Mostre na tela os números de 1 a 10.
+2 - Mostre todos os números pares de 1 a 20.
+3 - Mostre todos os números ímpares de 1 a 20.
+4 - Solicite um número ao usuário e mostre a tabuada desse número de 1 a 10.
+5 - Mostre uma contagem regressiva de 10 até 1.
+6 - Solicite a idade de 5 pessoas e informe a média das idades.
