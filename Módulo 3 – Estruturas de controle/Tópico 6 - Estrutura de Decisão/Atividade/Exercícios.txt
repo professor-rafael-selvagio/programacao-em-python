@@ -1,0 +1,11 @@
+1. Controle de acesso
+Desenvolva um programa em Python que solicite o nome e a idade de uma pessoa. Se a idade for maior ou igual a 18 anos, o acesso deverá ser liberado sem a necessidade de informar um responsável. Caso a idade seja menor de 18 anos, o programa deverá solicitar também o nome do responsável. Ao final, exiba uma mensagem contendo o nome da pessoa, sua idade, informando se possui responsável e, quando houver, o nome do responsável.
+
+2. Sistema de prioridade no atendimento
+Desenvolva um programa em Python que receba a idade de uma pessoa e informe se ela possui deficiência. O programa deverá verificar se a idade é maior ou igual a 60 anos ou se a pessoa possui deficiência. Caso pelo menos uma dessas condições seja verdadeira, exiba a mensagem  Atendimento prioritário. Caso contrário, exiba Atendimento normal.
+
+3. Validação de acesso a um benefício
+Desenvolva um programa em Python que receba a idade de uma pessoa e sua renda mensal. O programa deverá verificar se a pessoa possui 18 anos ou mais e se sua renda mensal é menor ou igual a R$ 2.500,00. Caso as duas condições sejam verdadeiras, exiba a mensagem Pode solicitar o benefício. Caso contrário, exiba Não atende aos critérios.
+
+4. Liberação de acesso a um sistema
+Desenvolva um programa em Python que solicite ao usuário um nome de usuário, uma senha e informe se o usuário está ativo. O acesso ao sistema deverá ser autorizado somente quando o nome de usuário for "admin", a senha for "1234" e o usuário estiver ativo. Se as três condições forem verdadeiras, exiba "Acesso autorizado". Caso contrário, exiba "Acesso negado".
