@@ -1,0 +1,943 @@
+# Sistema de Login Python + Tkinter + Excel
+
+## 1. Estrutura do projeto
+
+```text
+sistema_login/
+│
+├── main.py
+├── interface.py
+├── autenticacao.py
+├── usuarios.xlsx
+└── requirements.txt
+```
+
+A separação será:
+
+* `main.py` → inicia o programa.
+* `interface.py` → telas e componentes Tkinter.
+* `autenticacao.py` → leitura da planilha e regras de autenticação.
+* `usuarios.xlsx` → banco de dados simples.
+* `requirements.txt` → dependência do projeto.
+
+---
+
+# 2. Arquivo `autenticacao.py`
+
+```python
+from pathlib import Path
+from openpyxl import Workbook, load_workbook
+
+
+ARQUIVO_USUARIOS = Path(__file__).resolve().parent / "usuarios.xlsx"
+
+COLUNAS_OBRIGATORIAS = [
+    "Nome",
+    "Login",
+    "Senha",
+    "Status",
+    "Nível"
+]
+
+
+def criar_planilha():
+    """
+    Cria a planilha inicial caso ela ainda não exista.
+    """
+
+    if ARQUIVO_USUARIOS.exists():
+        return
+
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "Usuarios"
+
+    worksheet.append(COLUNAS_OBRIGATORIAS)
+
+    usuarios = [
+        ["João Silva", "joao", "1234", "Ativo", "Usuário"],
+        ["Maria Souza", "maria", "5678", "Ativo", "Administrador"],
+        ["Pedro Santos", "pedro", "1111", "Inativo", "Usuário"],
+        ["Ana Lima", "ana", "2222", "Ativo", "Usuário"],
+        ["Carlos Oliveira", "carlos", "3333", "Inativo", "Administrador"],
+        ["Fernanda Costa", "fernanda", "4444", "Ativo", "Administrador"]
+    ]
+
+    for usuario in usuarios:
+        worksheet.append(usuario)
+
+    # Ajusta a largura das colunas
+    larguras = {
+        "A": 25,
+        "B": 18,
+        "C": 18,
+        "D": 15,
+        "E": 20
+    }
+
+    for coluna, largura in larguras.items():
+        worksheet.column_dimensions[coluna].width = largura
+
+    # Deixa o cabeçalho em negrito
+    for celula in worksheet[1]:
+        celula.font = celula.font.copy(bold=True)
+
+    worksheet.freeze_panes = "A2"
+
+    workbook.save(ARQUIVO_USUARIOS)
+
+
+def carregar_usuarios():
+    """
+    Carrega os usuários da planilha.
+
+    Retorna:
+        list: lista de dicionários contendo os usuários.
+
+    Levanta:
+        Exception: quando existe algum problema com a planilha.
+    """
+
+    criar_planilha()
+
+    try:
+        workbook = load_workbook(
+            ARQUIVO_USUARIOS,
+            data_only=True
+        )
+
+        worksheet = workbook.active
+
+        linhas = list(
+            worksheet.iter_rows(values_only=True)
+        )
+
+        if not linhas:
+            raise Exception(
+                "A planilha está vazia."
+            )
+
+        cabecalho = [
+            str(valor).strip()
+            if valor is not None
+            else ""
+            for valor in linhas[0]
+        ]
+
+        # Verifica se todas as colunas existem
+        colunas_ausentes = [
+            coluna
+            for coluna in COLUNAS_OBRIGATORIAS
+            if coluna not in cabecalho
+        ]
+
+        if colunas_ausentes:
+            raise Exception(
+                "A planilha não possui as colunas obrigatórias: "
+                + ", ".join(colunas_ausentes)
+            )
+
+        indices = {
+            coluna: cabecalho.index(coluna)
+            for coluna in COLUNAS_OBRIGATORIAS
+        }
+
+        usuarios = []
+
+        for linha in linhas[1:]:
+
+            if not linha:
+                continue
+
+            if all(valor is None for valor in linha):
+                continue
+
+            usuario = {}
+
+            for coluna, indice in indices.items():
+
+                if indice < len(linha):
+                    valor = linha[indice]
+                else:
+                    valor = ""
+
+                usuario[coluna] = (
+                    str(valor).strip()
+                    if valor is not None
+                    else ""
+                )
+
+            usuarios.append(usuario)
+
+        return usuarios
+
+    except Exception as erro:
+
+        raise Exception(
+            f"Não foi possível carregar a planilha.\n\n"
+            f"Detalhes: {erro}"
+        )
+
+
+def autenticar(login, senha):
+    """
+    Realiza a autenticação do usuário.
+
+    A validação acontece nesta ordem:
+
+    1. Login e senha
+    2. Status
+    3. Acesso autorizado
+    """
+
+    usuarios = carregar_usuarios()
+
+    usuario_encontrado = None
+
+    # 1. Verifica login e senha
+    for usuario in usuarios:
+
+        if (
+            usuario["Login"] == login
+            and usuario["Senha"] == senha
+        ):
+            usuario_encontrado = usuario
+            break
+
+    # Login ou senha incorretos
+    if usuario_encontrado is None:
+
+        return {
+            "sucesso": False,
+            "tipo": "credenciais",
+            "mensagem": "Login ou senha incorretos."
+        }
+
+    # 2. Verifica o status
+    if usuario_encontrado["Status"].lower() != "ativo":
+
+        return {
+            "sucesso": False,
+            "tipo": "inativo",
+            "mensagem": (
+                "Este usuário está inativo. "
+                "Entre em contato com o administrador."
+            )
+        }
+
+    # 3. Login autorizado
+    return {
+        "sucesso": True,
+        "tipo": "sucesso",
+        "mensagem": (
+            f"Bem-vindo, {usuario_encontrado['Nome']}!"
+        ),
+        "usuario": usuario_encontrado
+    }
+
+
+def usuario_e_administrador(usuario):
+    """
+    Verifica se o usuário possui nível administrativo.
+    """
+
+    return (
+        usuario is not None
+        and usuario["Nível"].lower()
+        == "administrador"
+    )
+```
+
+---
+
+# 3. Arquivo `interface.py`
+
+```python
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+from autenticacao import (
+    autenticar,
+    carregar_usuarios,
+    usuario_e_administrador
+)
+
+
+class SistemaLogin:
+
+    def __init__(self, janela):
+
+        self.janela = janela
+
+        self.janela.title("Sistema de Login")
+
+        self.janela.geometry("450x380")
+
+        self.janela.resizable(
+            False,
+            False
+        )
+
+        self.configurar_estilo()
+
+        self.criar_tela_login()
+
+        # Tecla Enter executa a mesma função do botão
+        self.janela.bind(
+            "<Return>",
+            lambda evento: self.realizar_login()
+        )
+
+
+    def configurar_estilo(self):
+
+        estilo = ttk.Style()
+
+        try:
+            estilo.theme_use("clam")
+        except tk.TclError:
+            pass
+
+        estilo.configure(
+            "Titulo.TLabel",
+            font=("Arial", 22, "bold")
+        )
+
+        estilo.configure(
+            "Subtitulo.TLabel",
+            font=("Arial", 10)
+        )
+
+        estilo.configure(
+            "Campo.TLabel",
+            font=("Arial", 10, "bold")
+        )
+
+        estilo.configure(
+            "Botao.TButton",
+            font=("Arial", 11, "bold")
+        )
+
+
+    def criar_tela_login(self):
+
+        self.frame = ttk.Frame(
+            self.janela,
+            padding=35
+        )
+
+        self.frame.pack(
+            fill="both",
+            expand=True
+        )
+
+        # Título
+        ttk.Label(
+            self.frame,
+            text="Sistema de Login",
+            style="Titulo.TLabel"
+        ).pack(
+            pady=(15, 5)
+        )
+
+        # Subtítulo
+        ttk.Label(
+            self.frame,
+            text="Informe seus dados para acessar o sistema.",
+            style="Subtitulo.TLabel"
+        ).pack(
+            pady=(0, 25)
+        )
+
+        # Login
+        ttk.Label(
+            self.frame,
+            text="Login",
+            style="Campo.TLabel"
+        ).pack(
+            anchor="w"
+        )
+
+        self.entry_login = ttk.Entry(
+            self.frame,
+            width=40
+        )
+
+        self.entry_login.pack(
+            fill="x",
+            pady=(5, 15)
+        )
+
+        # Senha
+        ttk.Label(
+            self.frame,
+            text="Senha",
+            style="Campo.TLabel"
+        ).pack(
+            anchor="w"
+        )
+
+        self.entry_senha = ttk.Entry(
+            self.frame,
+            width=40,
+            show="*"
+        )
+
+        self.entry_senha.pack(
+            fill="x",
+            pady=(5, 20)
+        )
+
+        # Botão
+        self.botao_entrar = ttk.Button(
+            self.frame,
+            text="Entrar",
+            style="Botao.TButton",
+            command=self.realizar_login
+        )
+
+        self.botao_entrar.pack(
+            fill="x",
+            ipady=5
+        )
+
+        self.entry_login.focus()
+
+
+    def realizar_login(self):
+
+        login = self.entry_login.get().strip()
+        senha = self.entry_senha.get().strip()
+
+        # ==========================================
+        # 1. CAMPOS VAZIOS
+        # ==========================================
+
+        if not login or not senha:
+
+            messagebox.showwarning(
+                "Campos obrigatórios",
+                "Todos os campos devem ser preenchidos.",
+                parent=self.janela
+            )
+
+            return
+
+        # ==========================================
+        # AUTENTICAÇÃO
+        # ==========================================
+
+        try:
+
+            resultado = autenticar(
+                login,
+                senha
+            )
+
+        except Exception as erro:
+
+            messagebox.showerror(
+                "Erro",
+                str(erro),
+                parent=self.janela
+            )
+
+            return
+
+        # ==========================================
+        # 2. LOGIN OU SENHA INCORRETOS
+        # ==========================================
+
+        if not resultado["sucesso"]:
+
+            if resultado["tipo"] == "credenciais":
+
+                messagebox.showerror(
+                    "Acesso negado",
+                    resultado["mensagem"],
+                    parent=self.janela
+                )
+
+            # ======================================
+            # 3. USUÁRIO INATIVO
+            # ======================================
+
+            elif resultado["tipo"] == "inativo":
+
+                messagebox.showwarning(
+                    "Usuário inativo",
+                    resultado["mensagem"],
+                    parent=self.janela
+                )
+
+            return
+
+        # ==========================================
+        # 4. LOGIN REALIZADO
+        # ==========================================
+
+        usuario = resultado["usuario"]
+
+        messagebox.showinfo(
+            "Login realizado",
+            resultado["mensagem"],
+            parent=self.janela
+        )
+
+        # ==========================================
+        # CONTROLE DE ACESSO ADMINISTRATIVO
+        # ==========================================
+
+        if usuario_e_administrador(usuario):
+
+            self.abrir_area_administrativa()
+
+        self.entry_senha.delete(
+            0,
+            tk.END
+        )
+
+
+    def abrir_area_administrativa(self):
+
+        try:
+
+            usuarios = carregar_usuarios()
+
+        except Exception as erro:
+
+            messagebox.showerror(
+                "Erro na planilha",
+                str(erro),
+                parent=self.janela
+            )
+
+            return
+
+        # Nova janela
+        janela_admin = tk.Toplevel(
+            self.janela
+        )
+
+        janela_admin.title(
+            "Área Administrativa"
+        )
+
+        janela_admin.geometry(
+            "800x450"
+        )
+
+        janela_admin.minsize(
+            700,
+            400
+        )
+
+        frame = ttk.Frame(
+            janela_admin,
+            padding=20
+        )
+
+        frame.pack(
+            fill="both",
+            expand=True
+        )
+
+        # ==========================================
+        # TÍTULO
+        # ==========================================
+
+        ttk.Label(
+            frame,
+            text="Área Administrativa",
+            style="Titulo.TLabel"
+        ).pack(
+            anchor="w"
+        )
+
+        # ==========================================
+        # CONTADOR
+        # ==========================================
+
+        ttk.Label(
+            frame,
+            text=f"Total de usuários cadastrados: {len(usuarios)}",
+            style="Subtitulo.TLabel"
+        ).pack(
+            anchor="w",
+            pady=(5, 15)
+        )
+
+        # ==========================================
+        # ÁREA DA TABELA
+        # ==========================================
+
+        tabela_frame = ttk.Frame(frame)
+
+        tabela_frame.pack(
+            fill="both",
+            expand=True
+        )
+
+        colunas = (
+            "Nome",
+            "Login",
+            "Senha",
+            "Status",
+            "Nível"
+        )
+
+        tabela = ttk.Treeview(
+            tabela_frame,
+            columns=colunas,
+            show="headings"
+        )
+
+        # Cabeçalhos
+        for coluna in colunas:
+
+            tabela.heading(
+                coluna,
+                text=coluna
+            )
+
+        # Largura das colunas
+        tabela.column(
+            "Nome",
+            width=200
+        )
+
+        tabela.column(
+            "Login",
+            width=120
+        )
+
+        tabela.column(
+            "Senha",
+            width=100
+        )
+
+        tabela.column(
+            "Status",
+            width=100
+        )
+
+        tabela.column(
+            "Nível",
+            width=150
+        )
+
+        # ==========================================
+        # SCROLL VERTICAL
+        # ==========================================
+
+        scrollbar_vertical = ttk.Scrollbar(
+            tabela_frame,
+            orient="vertical",
+            command=tabela.yview
+        )
+
+        tabela.configure(
+            yscrollcommand=scrollbar_vertical.set
+        )
+
+        # ==========================================
+        # SCROLL HORIZONTAL
+        # ==========================================
+
+        scrollbar_horizontal = ttk.Scrollbar(
+            tabela_frame,
+            orient="horizontal",
+            command=tabela.xview
+        )
+
+        tabela.configure(
+            xscrollcommand=scrollbar_horizontal.set
+        )
+
+        tabela.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        scrollbar_vertical.grid(
+            row=0,
+            column=1,
+            sticky="ns"
+        )
+
+        scrollbar_horizontal.grid(
+            row=1,
+            column=0,
+            sticky="ew"
+        )
+
+        tabela_frame.rowconfigure(
+            0,
+            weight=1
+        )
+
+        tabela_frame.columnconfigure(
+            0,
+            weight=1
+        )
+
+        # ==========================================
+        # INSERE OS USUÁRIOS
+        # ==========================================
+
+        for usuario in usuarios:
+
+            tabela.insert(
+                "",
+                "end",
+                values=(
+                    usuario["Nome"],
+                    usuario["Login"],
+                    usuario["Senha"],
+                    usuario["Status"],
+                    usuario["Nível"]
+                )
+            )
+
+        # ==========================================
+        # BOTÃO FECHAR
+        # ==========================================
+
+        ttk.Button(
+            frame,
+            text="Fechar",
+            command=janela_admin.destroy
+        ).pack(
+            anchor="e",
+            pady=(15, 0)
+        )
+
+
+def iniciar_interface():
+
+    janela = tk.Tk()
+
+    SistemaLogin(janela)
+
+    janela.mainloop()
+```
+
+---
+
+# 4. Arquivo `main.py`
+
+```python
+from interface import iniciar_interface
+
+
+if __name__ == "__main__":
+    iniciar_interface()
+```
+
+---
+
+# 5. Arquivo `requirements.txt`
+
+```text
+openpyxl
+```
+
+---
+
+# 6. Planilha `usuarios.xlsx`
+
+O arquivo será criado automaticamente na primeira execução caso ainda não exista.
+
+A estrutura será:
+
+| Nome            | Login    | Senha | Status  | Nível         |
+| --------------- | -------- | ----- | ------- | ------------- |
+| João Silva      | joao     | 1234  | Ativo   | Usuário       |
+| Maria Souza     | maria    | 5678  | Ativo   | Administrador |
+| Pedro Santos    | pedro    | 1111  | Inativo | Usuário       |
+| Ana Lima        | ana      | 2222  | Ativo   | Usuário       |
+| Carlos Oliveira | carlos   | 3333  | Inativo | Administrador |
+| Fernanda Costa  | fernanda | 4444  | Ativo   | Administrador |
+
+---
+
+# 7. Instalação
+
+Abra o terminal dentro da pasta `sistema_login`.
+
+Crie um ambiente virtual:
+
+```bash
+python -m venv .venv
+```
+
+No Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+No Linux/macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Instale o OpenPyXL:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 8. Executar o sistema
+
+Execute:
+
+```bash
+python main.py
+```
+
+---
+
+# 9. Testes
+
+### Usuário comum
+
+```text
+Login: joao
+Senha: 1234
+```
+
+Resultado:
+
+```text
+Bem-vindo, João Silva!
+```
+
+A área administrativa não será aberta.
+
+### Administrador
+
+```text
+Login: maria
+Senha: 5678
+```
+
+Resultado:
+
+```text
+Bem-vindo, Maria Souza!
+```
+
+Depois será aberta a Área Administrativa.
+
+### Usuário inativo
+
+```text
+Login: pedro
+Senha: 1111
+```
+
+Resultado:
+
+```text
+Este usuário está inativo.
+Entre em contato com o administrador.
+```
+
+### Senha incorreta
+
+```text
+Login: maria
+Senha: 9999
+```
+
+Resultado:
+
+```text
+Login ou senha incorretos.
+```
+
+### Campos vazios
+
+Sem informar login ou senha:
+
+```text
+Todos os campos devem ser preenchidos.
+```
+
+---
+
+# 10. Fluxo da autenticação
+
+O sistema segue exatamente esta sequência:
+
+```text
+                 INÍCIO
+                    │
+                    ▼
+             Informou login
+             e senha?
+              /        \
+            NÃO        SIM
+             │          │
+             ▼          ▼
+       Campos vazios   Consulta
+                      Excel
+                        │
+                        ▼
+                Login + senha
+                  corretos?
+                 /         \
+               NÃO         SIM
+                │           │
+                ▼           ▼
+       "Login ou senha"   Status
+         incorretos       Ativo?
+                         /     \
+                       NÃO     SIM
+                        │       │
+                        ▼       ▼
+                  Usuário      Login
+                   inativo    autorizado
+                                │
+                                ▼
+                           Administrador?
+                           /           \
+                         NÃO           SIM
+                          │             │
+                          ▼             ▼
+                       Fim       Área administrativa
+```
+
+## Observação importante
+
+A autorização administrativa não depende de esconder ou mostrar um botão.
+
+O código verifica diretamente:
+
+```python
+if usuario_e_administrador(usuario):
+    self.abrir_area_administrativa()
+```
+
+E a função:
+
+```python
+def usuario_e_administrador(usuario):
+    return (
+        usuario is not None
+        and usuario["Nível"].lower() == "administrador"
+    )
+```
+
+Portanto, um usuário comum não recebe autorização para abrir a área administrativa.
+
+## Observação de segurança
+
+Este projeto foi estruturado para fins didáticos. As senhas ficam armazenadas diretamente no Excel porque o objetivo é demonstrar autenticação, Tkinter e manipulação de planilhas.
+
+Em um sistema real, não seria recomendado armazenar senhas em texto simples ou utilizar Excel como banco de dados.

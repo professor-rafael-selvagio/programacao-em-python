@@ -1,0 +1,10 @@
+Enunciado — Sistema de Login com Interface Gráfica e Planilha Excel
+
+Desenvolva, em Python com Tkinter, um sistema de login que autentica usuários a partir de uma planilha Excel (usuarios.xlsx) com as colunas Nome, Login, Senha, Status (Ativo/Inativo) e Nível (Usuário/Administrador). Cadastre pelo menos seis usuários, incluindo exemplos de cada situação.
+
+A tela deve ter campos de login e senha (oculta), com botão de entrar funcionando também pelo Enter. O sistema deve validar, nessa ordem: campos vazios, login/senha incorretos (mensagem genérica) e usuário inativo (mensagem específica). Login correto exibe mensagem de boas-vindas com o nome do usuário.
+
+Se o usuário for Administrador, uma segunda tela deve abrir automaticamente listando todos os usuários (nome, login, senha, status) em formato de tabela, com contador de total e botão para fechar. Usuários comuns não podem acessar essa tela.
+O código deve ser organizado (lógica separada da interface), com nomes e comentários claros, e tratar erros ao carregar a planilha (arquivo ausente/corrompido).
+
+Abaixo, seguem algumas imagens das telas do sistema para melhor visualização e compreensão das funcionalidades.
