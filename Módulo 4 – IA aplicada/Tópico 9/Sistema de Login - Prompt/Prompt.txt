@@ -1,0 +1,48 @@
+Crie um sistema de login em Python usando Tkinter, com autenticação de usuários armazenados em uma planilha Excel (.xlsx) lida via openpyxl.
+
+## Estrutura de dados
+A planilha "usuarios.xlsx" (mesma pasta do script) tem as colunas:
+Nome | Login | Senha | Status | Nível
+
+- Status: "Ativo" ou "Inativo"
+- Nível: "Usuário" ou "Administrador"
+
+## Funcionalidades
+
+1. **Carregar usuários**: função que lê a planilha (read_only, data_only) e retorna uma lista de dicionários (cabeçalho -> valor por linha). Tratar erros de arquivo não encontrado/corrompido sem quebrar a aplicação (guardar o erro e mostrar um messagebox depois que a janela existir).
+
+2. **Tela de login**:
+   - Campos de Login e Senha (senha mascarada com opção de mostrar/ocultar, tipo olho 👁/🙈).
+   - Botão "Entrar" e tecla Enter também disparam o login.
+   - Validação: campos vazios mostram erro inline (não popup) abaixo dos campos.
+   - Comparação de login/senha deve ser exata (strip no login, sem strip na senha).
+
+3. **Regras de autenticação**:
+   - Login/senha incorretos -> erro inline "Login ou senha incorretos."
+   - Usuário encontrado mas Status != "Ativo" -> erro inline "Usuário desativado. Procure seu líder." incluindo o nome.
+   - Login bem-sucedido -> messagebox de sucesso com o nome do usuário.
+   - Se o usuário autenticado tiver Nível = "Administrador", abrir automaticamente um painel de administração (nova janela).
+
+4. **Painel de administração** (Toplevel, modal, centralizado em relação à janela principal):
+   - Tabela (ttk.Treeview) listando TODOS os usuários da planilha: Nome, Login, Senha, Status.
+   - Linhas com cores alternadas (zebra) para leitura.
+   - Scrollbar vertical.
+   - Contador de total de usuários no rodapé.
+   - Botão "Fechar".
+
+## Diretrizes de design (importante, não use o visual padrão do Tkinter)
+
+- Paleta de cores definida em constantes: fundo claro (#EEF1F8), cartão branco (#FFFFFF), cor primária roxo/azul (#4F46E5) com variante hover mais escura, texto principal escuro (#1F2937), texto secundário cinza (#6B7280), erro em vermelho (#DC2626).
+- Layout tipo "card": faixa colorida decorativa no topo da janela com um ícone (emoji), e um cartão branco central com efeito de leve sombra/elevação (usando um Frame cinza atrás, ligeiramente deslocado).
+- Tipografia: usar tkinter.font com família "Segoe UI" em pesos diferentes para título, subtítulo, labels (uppercase, bold, pequenas) e campos.
+- Campos de entrada sem borda padrão do SO: usar um Frame com highlightthickness=1 ao redor do Entry (bd=0), mudando a cor da borda ao ganhar foco (efeito FocusIn/FocusOut).
+- Botões sem relevo 3D (relief="flat", bd=0), com efeito hover trocando o background nos eventos <Enter>/<Leave>.
+- Janela principal e o painel de administração devem abrir centralizados na tela (calcular com winfo_screenwidth/height).
+- Estilizar o ttk.Treeview do painel (tema "clam") para combinar com a paleta: cabeçalho roxo com texto branco, linhas zebradas, seleção na cor primária.
+- Rodapé discreto na tela de login (ex: "© Sistema de Login").
+
+## Código
+- Nomes de funções e variáveis em português, com docstrings.
+- Separar claramente: lógica de dados/autenticação vs. construção da interface.
+- Comentários organizando as seções (paleta de cores, tela principal, painel admin, etc.).
+- Sem dependências externas além de tkinter e openpyxl.
