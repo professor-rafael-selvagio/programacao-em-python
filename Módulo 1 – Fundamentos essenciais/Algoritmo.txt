@@ -1,0 +1,39 @@
+Atividades práticas
+🧩 Atividade 1 – Passo a passo
+
+👉 Descrever o algoritmo de:
+
+Fazer login em um sistema
+Baixar um arquivo
+🧩 Atividade 2 – Entrada/Processo/Saída
+
+👉 Para um cenário real (ex: gerar relatório):
+
+Entrada: ?
+Processamento: ?
+Saída: ?
+🧩 Atividade 3 – Abstração
+
+👉 Dado um problema, listar:
+
+O que é importante
+O que pode ignorar
+🧩 Atividade 4 – Fluxograma
+
+👉 Criar fluxo simples de:
+
+Acessar sistema
+Buscar dados
+Gerar resultado
+🧩 Atividade 5 – Teste de mesa
+
+👉 Simular execução de um processo:
+
+Lista de tarefas
+Acompanhar passo a passo
+🧩 Atividade 6 – Quebra de problema
+
+👉 Escolher uma tarefa do trabalho e:
+
+Dividir em etapas
+Organizar em ordem

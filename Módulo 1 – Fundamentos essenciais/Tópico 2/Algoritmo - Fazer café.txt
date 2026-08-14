@@ -1,0 +1,3 @@
+Hora de testar a sua lógica! ☕ Acesse o link abaixo para rodar e validar o seu algoritmo do café no sistema do Google AI Studio. Vamos ver se o seu passo a passo funciona perfeitamente!
+
+https://algoritmo-cafe.lovable.app/

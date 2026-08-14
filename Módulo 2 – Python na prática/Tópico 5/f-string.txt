@@ -1,0 +1,5 @@
+Crie um programa que solicite ao usuário seu nome, idade, cidade onde mora e curso que está fazendo. Ao final, exiba todas essas informações utilizando apenas um comando print com f-strings.
+
+A mensagem exibida pelo seu programa deve seguir o exemplo de saída apresentado abaixo, respeitando a mesma ordem das informações, palavras, pontuação e espaços.
+
+Exemplo de saída: O nome digitado foi João, ele tem 18 anos, mora em São Carlos e está cursando Programação em Python.

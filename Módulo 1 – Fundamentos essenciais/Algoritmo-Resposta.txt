@@ -1,0 +1,50 @@
+
+Respostas das atividades práticas
+🧩 Atividade 1 – Passo a passo
+
+Fazer login em um sistema:
+
+Abrir o sistema.
+Informar usuário e senha.
+Clicar em entrar.
+
+Baixar um arquivo:
+
+Localizar o arquivo.
+Clicar em baixar.
+Aguardar o download.
+🧩 Atividade 2 – Entrada / Processo / Saída
+
+Cenário: gerar um relatório
+
+Entrada: dados para o relatório.
+Processamento: organizar e analisar os dados.
+Saída: relatório gerado.
+🧩 Atividade 3 – Abstração
+
+Exemplo: cadastrar um usuário
+
+Importante: nome, e-mail e senha.
+Pode ignorar: cor favorita e outros dados que não são necessários.
+🧩 Atividade 4 – Fluxograma
+
+Início → Acessar sistema → Buscar dados → Gerar resultado → Fim
+
+🧩 Atividade 5 – Teste de mesa
+
+Tarefa: fazer café
+
+Separar os ingredientes.
+Preparar o café.
+Servir.
+
+Acompanhar cada etapa e verificar se o resultado está correto.
+
+🧩 Atividade 6 – Quebra de problema
+
+Tarefa: gerar um relatório
+
+Buscar os dados.
+Organizar as informações.
+Gerar o relatório.
+Salvar ou enviar o resultado.

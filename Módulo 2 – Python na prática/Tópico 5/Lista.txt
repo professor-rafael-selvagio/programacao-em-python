@@ -1,0 +1,43 @@
+Nessa atividade vamos desenvolver alguns algoritmos em Python, usando o VS Code.
+
+Exercício 1 - Antecessor e Sucessor
+Leia um número inteiro e mostre seu antecessor e seu sucessor.
+
+Exercício 2 - Dobro, triplo e metade
+Leia um número e exiba seu dobro, seu triplo e sua metade.
+
+Exercício 3 - Conversão de temperatura
+Leia uma temperatura em graus Celsius e converta para Fahrenheit.
+Fórmula: F = (C * 9 / 5) + 32
+
+Exercício 4 - Área do retângulo
+Leia a base e a altura de um retângulo e calcule sua área.
+Fórmula: Área = Base * Altura
+
+Exercício 5 – Perímetro de um retângulo
+Leia a base e a altura de um retângulo e calcule seu perímetro.
+Fórmula: (Base + Altura) * 2
+
+Exercício 6 – Desconto em produto
+Leia o preço de um produto e o percentual de desconto. Calcule o valor do desconto e o preço final.
+Fórmula: 
+Desconto = (Preço * Percentual) / 100
+Preço Final = Preço - Desconto
+
+Exercício 7 – Salário com aumento
+Leia o salário de um funcionário e o percentual de aumento. Calcule o novo salário.
+Fórmula: 
+Aumento = (Salário * Percentual) / 100
+Novo Salário = Salário + Aumento
+
+Exercício 8 – Consumo de combustível
+Leia a distância percorrida (km) e a quantidade de combustível consumida (litros). Calcule o consumo médio em km/L.
+Fórmula: Consumo Médio = Distância Percorrida / Combustível Consumido
+
+Exercício 9 – Conversão de tempo
+Leia uma quantidade de horas e converta para minutos. Ex: 1 hora = 60 minutos.
+
+Exercício 10 – Orçamento de compra
+Leia o preço de três produtos e calcule:
+• o valor total da compra;
+• o valor médio dos produtos.

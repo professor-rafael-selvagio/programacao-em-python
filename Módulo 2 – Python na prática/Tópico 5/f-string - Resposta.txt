@@ -1,0 +1,6 @@
+nome = input("Digite seu nome: ")
+idade = input("Digite sua idade: ")
+cidade = input("Digite a cidade onde mora: ")
+curso = input("Digite o curso que está fazendo: ")
+
+print(f"O nome digitado foi {nome}, ele tem {idade} anos, mora em {cidade} e está cursando {curso}.")
