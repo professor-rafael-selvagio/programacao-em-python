@@ -1,7 +1,11 @@
-# 1 - Mostre na tela os números de 1 a 10 utilizando a estrutura de repetição while.
+# 1. Senha correta
+# Solicite uma senha até que ela esteja correta. Depois, mostre
+# a mensagem "Acesso permitido!".
 
-numero = 1
+senha_correta = "python123"
+senha = input("Digite a senha: ")
 
-while numero <= 10:
-    print(numero)
-    numero += 1
+while senha != senha_correta:
+    senha = input("Senha incorreta. Tente novamente: ")
+
+print("Acesso permitido!")

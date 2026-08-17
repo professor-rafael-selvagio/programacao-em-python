@@ -1,15 +1,10 @@
-# 3 - Solicite uma senha ao usuário, permitindo no máximo 3 tentativas.
-# A senha correta é "python123".
+# 3. Nota válida
+# Solicite uma nota entre 0 e 10 até que o usuário informe um valor válido.
+# Depois, exiba a nota recebida.
 
-senha_correta = "python123"
-tentativas = 0
-senha = ""
+nota = float(input("Digite uma nota entre 0 e 10: ").replace(",", "."))
 
-while tentativas < 3 and senha != senha_correta:
-    senha = input("Digite a senha: ")
-    tentativas += 1
+while nota < 0 or nota > 10:
+    nota = float(input("Nota inválida. Digite uma nota entre 0 e 10: ").replace(",", "."))
 
-if senha == senha_correta:
-    print("Acesso autorizado")
-else:
-    print("Acesso bloqueado")
+print(f"Nota recebida: {nota:g}")

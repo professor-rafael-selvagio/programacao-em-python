@@ -1,9 +1,16 @@
 Lista de atividades - Estrutura de repetição WHILE
 
-1 - Mostre na tela os números de 1 a 10 utilizando a estrutura de repetição while.
+1. Senha correta
+Crie um programa que solicite ao usuário uma senha para acessar o sistema. Enquanto a senha informada estiver incorreta, o programa deverá continuar solicitando que o usuário tente novamente. Quando a senha correta for digitada, o programa deverá exibir a mensagem "Acesso permitido!".
 
-2 - Solicite números inteiros ao usuário até que ele digite 0. Ao final, mostre a soma de todos os números informados, sem incluir o zero.
+2. Número positivo
+Crie um programa que solicite um número ao usuário. Enquanto o número informado for menor ou igual a zero, o programa deverá continuar solicitando um novo valor. Quando o usuário informar um número positivo, o programa deverá exibir a mensagem "Número válido!".
 
-3 - Crie um programa que solicite uma senha ao usuário. Ele terá no máximo 3 tentativas para informar a senha correta, que será "python123". Ao acertar, mostre "Acesso autorizado". Se errar as 3 tentativas, mostre "Acesso bloqueado".
+3. Nota válida
+Crie um programa que solicite ao usuário uma nota entre 0 e 10. Enquanto a nota informada estiver fora desse intervalo, o programa deverá solicitar uma nova nota. Assim que uma nota válida for informada, o programa deverá exibir o valor recebido.
 
-4 - Crie um programa que exiba um menu com as opções "1 - Ver saldo", "2 - Depositar" e "0 - Sair". O programa deverá repetir o menu até que o usuário escolha sair. O saldo inicial será R$ 0,00. Ao depositar, solicite o valor e atualize o saldo.
+4. Digite 0 para sair
+Crie um programa que solicite continuamente números inteiros ao usuário. O programa deverá continuar solicitando novos números enquanto o usuário não informar 0. Quando o valor 0 for digitado, o programa deverá encerrar a execução.
+
+5. Soma até zero
+Crie um programa que solicite vários números ao usuário e acumule a soma de todos os valores informados. O programa deverá continuar solicitando números até que o usuário digite 0. Ao receber o valor 0, a entrada de dados deverá ser encerrada e o programa deverá exibir a soma de todos os números informados anteriormente.

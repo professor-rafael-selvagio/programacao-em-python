@@ -1,11 +1,10 @@
-# 2 - Solicite números inteiros ao usuário até que ele digite 0.
-# Ao final, mostre a soma dos números informados, sem incluir o zero.
+# 2. Número positivo
+# Solicite números até que o usuário informe um número positivo.
+# Depois, mostre a mensagem "Número válido!".
 
-soma = 0
-numero = int(input("Digite um número inteiro (0 para encerrar): "))
+numero = float(input("Digite um número positivo: ").replace(",", "."))
 
-while numero != 0:
-    soma += numero
-    numero = int(input("Digite outro número inteiro (0 para encerrar): "))
+while numero <= 0:
+    numero = float(input("Número inválido. Digite um número positivo: ").replace(",", "."))
 
-print(f"A soma dos números informados é {soma}.")
+print("Número válido!")
