@@ -15,7 +15,7 @@ while tentativas < 3:
         tentativas += 1
         print("Usuário ou senha incorretos.")
 
-        if tentativas > 3:
+        if tentativas == 3:
             print("Conta Bloqueada")
 
             admin = input("Digite a senha do Admin para desbloquear: ")
