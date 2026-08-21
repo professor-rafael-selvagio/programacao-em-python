@@ -1,0 +1,39 @@
+🚀 Continue aprendendo Python!
+Chegamos ao Tópico 14! Agora é hora de continuar praticando e explorando tudo o que você pode fazer com Python. 🐍💻
+
+Separei alguns aplicativos, plataformas e conteúdos para você continuar aprendendo e desenvolvendo suas habilidades:
+
+📱Plataformas para aprender Python
+
+🔹Mimo
+https://mimo.org/
+
+🔹SoloLearn
+https://www.sololearn.com/
+
+🔹Codecademy
+https://www.codecademy.com/learn/learn-python-3
+
+🔹DataCamp
+https://www.datacamp.com/
+
+🔹Exercism — Python
+https://exercism.org/tracks/python
+
+🔹Google Colab
+https://colab.research.google.com/
+
+🔹Thonny
+https://thonny.org/
+
+🤖 Automação com Python e Selenium
+Quer continuar explorando o mundo da automação? Confira esta playlist no YouTube:
+https://www.youtube.com/watch?v=8AMNaVt0z_M
+
+🎓 Minicurso gratuito de Automação com Python
+A Hashtag Treinamentos também disponibiliza um minicurso gratuito sobre automação com Python:
+https://dlp.hashtagtreinamentos.com/python/minicurso/minicurso-automacao/obrigado?aula=1
+
+💡 A melhor forma de aprender programação é praticando. Explore os conteúdos, faça os exercícios, crie seus próprios projetos e não tenha medo de errar.
+
+Continue praticando e explorando tudo o que o Python pode fazer! 🚀🐍
