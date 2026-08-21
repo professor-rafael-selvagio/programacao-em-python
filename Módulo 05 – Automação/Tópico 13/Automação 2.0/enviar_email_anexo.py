@@ -13,7 +13,9 @@ remetente = "professor.rafael.selvagio@gmail.com"
 destinatario = input("Digite o e-mail do destinatário: ")
 
 # Solicita a senha de app
-senha = os.getenv("EMAIL_SENHA")
+caminho_senha = Path(__file__).parent / "pass.txt"
+with open(caminho_senha, "r") as arquivo:
+    senha = arquivo.read().strip()
 
 
 # Pasta onde este arquivo Python está localizado
