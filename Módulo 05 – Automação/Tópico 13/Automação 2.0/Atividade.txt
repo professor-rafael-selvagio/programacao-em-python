@@ -1,0 +1,11 @@
+Atividade Prática: Organizador de Arquivos em Python
+
+Objetivo: Crie um script para organizar arquivos automaticamente por tipo.
+
+Instruções:
+
+1. Baixar arquivos: Baixe e descompacte a pasta `Automação 1.0` em seu computador.
+2. Analisar extensões: Identifique as extensões de cada arquivo presente na pasta (ex: `.pdf`, `.png`, `.xlsx`, `.jpg`).
+3. Criar o script: Na raiz da pasta `Automação 1.0`, crie o arquivo `organiza.py`.
+4. Implementar a lógica: Escreva o código Python necessário para mover cada arquivo para sua respectiva pasta de destino.
+* *Exemplo:* Arquivos `.png` e `.jpg` devem ser movidos para a pasta Imagens (criando a pasta caso ela ainda não exista).
