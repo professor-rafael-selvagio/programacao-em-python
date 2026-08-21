@@ -1,0 +1,17 @@
+Desafio 1 — Cadastro de novos usuários
+Crie uma tela que permita cadastrar novos usuários diretamente pelo sistema. O cadastro deve solicitar o nome, o login, a senha, o status e o nível de acesso. O sistema deve impedir o cadastro de dois usuários com o mesmo login e salvar as informações do novo usuário em uma planilha Excel.
+
+Desafio 2 — Alteração de usuários
+Permita que o administrador selecione um usuário da tabela e altere suas informações, como nome, senha, status e nível de acesso. Após realizar as alterações, o sistema deve salvar as informações atualizadas na planilha Excel.
+
+Desafio 3 — Exclusão de usuários
+Adicione uma opção para excluir usuários do sistema. Antes de realizar a exclusão, o sistema deve solicitar uma confirmação do administrador, evitando que um usuário seja removido acidentalmente.
+
+Desafio 4 — Limite de tentativas de login
+Implemente um sistema de controle de tentativas de login. Após um número definido de tentativas incorretas, como 3 ou 5, o sistema deve bloquear temporariamente novas tentativas de acesso. Quando o usuário for bloqueado, somente o administrador poderá realizar o desbloqueio e permitir que ele volte a acessar o sistema.
+
+Desafio 5 — Mostrar e ocultar senha
+Adicione um botão ou checkbox que permita ao usuário visualizar temporariamente a senha digitada. O usuário deve poder alternar entre a senha oculta e a senha visível, conforme sua preferência durante o preenchimento do campo.
+
+Desafio Final — Senhas mais seguras
+Pesquise e implemente uma forma de armazenar as senhas de maneira mais segura, evitando que elas sejam salvas em texto puro na planilha Excel. Para isso, utilize técnicas de hash de senha, garantindo que o sistema continue sendo capaz de validar corretamente o login do usuário.

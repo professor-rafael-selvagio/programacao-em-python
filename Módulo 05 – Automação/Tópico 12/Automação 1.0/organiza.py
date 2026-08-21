@@ -45,7 +45,8 @@ print(f"\nPasta selecionada: {pasta_atual}")
 # Arquivos que não serão organizados
 excecoes = [
     "organiza.py",
-    "desorganiza.py"
+    "desorganiza.py",
+    "Atividade.txt"
 ]
 
 # Extensões de cada categoria

@@ -1,0 +1,79 @@
+Lista de Exercícios (Parte 1 de 3)
+
+Treinando Bibliotecas (Import)
+
+Exercício 1: Escreva um programa que importe a biblioteca random e sorteie um número inteiro aleatório entre 1 e 50, imprimindo o resultado na tela com uma mensagem amigável para o usuário.
+
+Exercício 2: Crie um programa que peça ao usuário para digitar um número decimal qualquer. Em seguida, importe a biblioteca math, calcule a raiz quadrada desse número específico e utilize a função math.ceil para arredondar o resultado para o número inteiro mais próximo.
+
+Exercício 3: Faça um programa que crie uma lista com cinco nomes inseridos por um laço. Após preencher a lista, importe random, embaralhe os nomes e escolha aleatoriamente um deles para ser o "monitor" do dia, imprimindo o sorteado.
+
+Treinando Redes de Proteção (Try-Except)
+
+Exercício 4: Peça ao usuário para digitar o ano exato em que nasceu. Utilize um bloco try-except para converter a entrada para inteiro. Se o usuário digitar letras, o programa deve capturar o erro e exibir uma mensagem calma pedindo apenas números.
+
+Exercício 5: Solicite dois números inteiros ao usuário e realize a divisão do primeiro pelo segundo. Utilize blocos try-except encadeados para tratar dois erros separadamente: a inserção de texto e a tentativa de dividir por zero.
+
+
+Lista de Exercícios (Parte 2 de 3)
+
+Restante de Try-Except
+
+Exercício 6: Crie uma lista com três nomes de cores cadastradas fixas. Peça ao usuário para digitar o índice da cor que deseja visualizar. Utilize try-except para evitar que o programa pare caso digite um índice inválido ou uma entrada que não seja numérica.
+
+Exercício 7: Crie uma função verifica_par que receba um inteiro como parâmetro e retorne True se for perfeitamente par, ou False caso contrário. Teste a função no programa principal pedindo um número ao usuário.
+
+Exercício 8: Escreva uma função calcular_area_retangulo que receba a largura e a altura. A função deve calcular e retornar a área total. No código principal, solicite esses valores ao usuário e exiba o resultado devolvido.
+
+Treinando Máquinas Reutilizáveis (Funções)
+
+Observação: O Exercício 7 aparece duplicado na lista original e será implementado uma única vez.
+
+Exercício 9: Crie uma função maior_de_tres que receba três números distintos como parâmetros e retorne qual deles é o maior valor numérico. Solicite esses três números no console, passe-os para a função e imprima o vencedor.
+
+Exercício 10: Desenvolva inverte_texto, que receba uma string e retorne-a escrita de trás para frente. Crie um laço while infinito que peça uma palavra, imprima-a invertida chamando a função, e pare apenas quando digitarem 'sair'.
+
+
+Desafios Integradores (Juntando Tudo)
+
+Exercício 11: Crie sortear_dado() usando random para retornar um número de 1 a 6. Pergunte ao usuário quantas vezes quer jogar. Use try-except para garantir que a quantidade seja um inteiro válido. Use um laço for para chamar a função e imprimir os resultados.
+
+Exercício 12: Crie duas funções: Celsius para Fahrenheit e o inverso. Faça um menu interativo onde o usuário escolhe a conversão. Utilize try-except para envolver a digitação da temperatura, impedindo o programa de quebrar se digitarem texto.
+
+Exercício 13: Jogo de adivinhação. Use random para gerar um número de 1 a 20. Escreva validar_chute() com try-except para converter a entrada com segurança, retornando None em caso de erro. Dê ao usuário 5 tentativas, avisando se o número secreto é maior ou menor.
+
+
+Lista de Exercícios (Parte 2 de 3)
+
+Restante de Try-Except
+
+Exercício 6
+Crie uma lista com três nomes de cores cadastradas fixas. Peça ao usuário para digitar o índice da cor que deseja visualizar. Utilize try-except para evitar que o programa pare caso digite um
+
+Exercício 7
+Crie uma função verifica_par que receba um inteiro como parâmetro e retorne True se for perfeitamente par, ou False caso contrário. Teste a função no programa principal pedindo um número ao usuário.
+
+Exercício 8
+Escreva uma função calcular_area_retangulo que receba a largura e a altura. A função deve calcular e retornar a área total. No código principal, solicite esses valores ao usuário e exiba o resultado devolvido.
+
+Treinando Máquinas Reutilizáveis (Funções)
+
+Exercício 7
+Crie uma função verifica_par que receba um inteiro como parâmetro e retorne True se for perfeitamente par, ou False caso contrário. Teste a função no programa principal pedindo um número ao usuário. (Nota: Este exercício aparece em duplicidade na imagem).
+
+Exercício 9
+Crie uma função maior_de_tres que receba três números distintos como parâmetros e retorne qual deles é o maior valor numérico. Solicite esses três números no console, passe-os para a função e imprima o vencedor.
+
+Exercício 10
+Desenvolva inverte_texto, que receba uma string e retorne-a escrita de trás para frente. Crie um laço while infinito que peça uma palavra, imprima-a invertida chamando a função, e pare apenas quando digitarem 'sair'.
+
+Desafios Integradores (Juntando Tudo)
+
+Exercício 11
+Crie sortear_dado() usando random para retornar um número de 1 a 6. Pergunte ao usuário quantas vezes quer jogar. Use try-except para garantir que a quantidade seja um inteiro válido. Use um laço for para chamar a função e imprimir os resultados.
+
+Exercício 12
+Crie duas funções: Celsius para Fahrenheit e o inverso. Faça um menu interativo onde o usuário escolhe a conversão. Utilize try-except para envolver a digitação da temperatura, impedindo o programa de quebrar se digitarem texto.
+
+Exercício 13
+Jogo de adivinhação. Use random para gerar um número (1-20). Escreva validar_chute() com try-except para converter a entrada com segurança, retornando nulo em caso de erro. Dê ao usuário 5 tentativas (while) avisando se o secreto é maior ou menor.
