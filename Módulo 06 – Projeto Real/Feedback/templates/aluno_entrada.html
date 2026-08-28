@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Entrar no feedback{% endblock %}
+{% block content %}<section class="card narrow"><span class="eyebrow">{{ sessao['turma'] }}</span><h1>Feedback da turma</h1>
+<p class="muted">Seu nome é opcional e não será exibido junto das respostas.</p>
+<form method="post"><label for="nome">Nome (opcional)</label><input id="nome" name="nome" maxlength="100" placeholder="Como podemos chamar você?"><button type="submit">Entrar no feedback</button></form></section>{% endblock %}

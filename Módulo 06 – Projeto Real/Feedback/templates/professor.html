@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Controle do feedback{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{% endblock %}
+{% block content %}<section class="topbar"><div><span class="eyebrow">Painel do professor</span><h1 id="turma">{{ sessao['turma'] }}</h1></div><button class="danger" id="encerrar">Encerrar feedback</button></section>
+<section class="card"><div class="stats"><div><strong id="pergunta-num">—</strong><span>Pergunta</span></div><div><strong id="conectados">0</strong><span>Alunos com resposta</span></div><div><strong id="respostas">0</strong><span>Respostas atuais</span></div><div><strong id="media">—</strong><span>Média</span></div></div>
+<h2 id="pergunta">Carregando...</h2><p id="escala" class="muted"></p><div id="graficos-notas" class="charts"><div class="chart-wrap"><h3>📊 Distribuição das notas</h3><canvas id="grafico"></canvas></div><div class="chart-wrap"><h3>🎯 Média da turma</h3><canvas id="grafico-media"></canvas></div></div><div id="aberta-aviso" class="alert">📝 Pergunta aberta: as respostas ficam armazenadas para consulta posterior e não são monitoradas nesta tela.</div>
+<div class="controls"><button id="proxima">Próxima pergunta</button><p id="aviso" class="muted"></p></div></section>
+<p class="share">Link para os alunos: <a href="{{ url_for('aluno', codigo=codigo, _external=True) }}">{{ url_for('aluno', codigo=codigo, _external=True) }}</a></p>
+<script>window.FEEDBACK_CODIGO={{ codigo|tojson }};window.FEEDBACK_TOKEN={{ token|tojson }};</script><script src="{{ url_for('static', filename='professor.js') }}"></script>{% endblock %}
