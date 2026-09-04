@@ -146,3 +146,12 @@ Este repositório representa o material de uma etapa concluída.
 Agora o próximo passo é continuar praticando, criando projetos e descobrindo tudo o que você pode fazer com Python.
 
 **Bons estudos e bons códigos! 🚀**
+
+
+
+
+## 👨‍🏫 Professor
+
+**Rafael Selvagio**  
+📧 SENAI: rselvagio@sp.senai.br  
+📧 Pessoal: professor.rafael.selvagio@gmail.com
