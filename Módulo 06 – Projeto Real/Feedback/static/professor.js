@@ -11,7 +11,7 @@ async function atualizar() {
   document.querySelector('#media').textContent = d.media ?? '—';
   document.querySelector('#pergunta').textContent = d.pergunta || 'Feedback encerrado';
   document.querySelector('#escala').textContent = d.escala ? `📏 Escala: ${d.escala}` : '';
-  document.querySelector('#proxima').disabled = d.encerrada || d.pergunta_atual >= d.total_perguntas;
+  document.querySelector('#proxima').disabled = d.encerrada || !d.tem_proxima;
   const graficosNotas = document.querySelector('#graficos-notas');
   const abertaAviso = document.querySelector('#aberta-aviso');
   if (d.tipo === 'nota') {
