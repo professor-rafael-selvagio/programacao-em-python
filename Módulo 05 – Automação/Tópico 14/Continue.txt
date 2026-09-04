@@ -37,3 +37,7 @@ https://dlp.hashtagtreinamentos.com/python/minicurso/minicurso-automacao/obrigad
 💡 A melhor forma de aprender programação é praticando. Explore os conteúdos, faça os exercícios, crie seus próprios projetos e não tenha medo de errar.
 
 Continue praticando e explorando tudo o que o Python pode fazer! 🚀🐍
+
+Minicurso de Automação usando Python: https://dlp.hashtagtreinamentos.com/python/minicurso/minicurso-automacao/obrigado?aula=1
+
+Automação usando Python e Selenium: https://www.youtube.com/watch?v=8AMNaVt0z_M

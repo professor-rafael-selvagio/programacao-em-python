@@ -1,0 +1,75 @@
+# 🎮 ATIVIDADE FINAL — CRIE SEU JOGO
+
+Chegou a hora de colocar em prática tudo o que aprendemos durante o curso!
+
+Você deverá criar um **pequeno jogo utilizando Python e Pygame**, com aproximadamente **2 horas para desenvolver o projeto**.
+
+## 🎯 O DESAFIO
+
+Crie um jogo com uma ideia simples, mas que funcione.
+
+Seu jogo deve possuir:
+
+* 🎮 Um jogador controlado pelo teclado;
+* 👾 Pelo menos um inimigo, obstáculo ou objeto;
+* 💥 Algum tipo de interação ou colisão;
+* 🏆 Pontuação, vidas ou algum contador;
+* 🎯 Uma condição de vitória ou derrota.
+
+## 🤖 PODE USAR IA?
+
+**Sim!**
+
+Você pode utilizar ferramentas de Inteligência Artificial para ajudar durante o desenvolvimento.
+
+A IA pode ajudar você a:
+
+* Criar ideias para o jogo;
+* Explicar códigos;
+* Encontrar e corrigir erros;
+* Sugerir melhorias;
+* Aprender recursos do Pygame.
+
+Mas existe uma regra importante:
+
+**Não basta copiar o código. Você precisa entender o que está utilizando e conseguir explicar como seu jogo funciona.**
+
+## 💡 ALGUMAS IDEIAS
+
+Você pode criar, por exemplo:
+
+* Um jogo de desviar de inimigos;
+* Um jogo de coletar moedas;
+* Um Pong;
+* Uma nave espacial;
+* Uma versão simples de Snake;
+* Um jogo de sobrevivência;
+* Ou criar uma ideia completamente diferente!
+
+## 🚀 TERMINOU ANTES?
+
+Melhore seu jogo!
+
+Você pode adicionar:
+
+* Imagens;
+* Sons;
+* Música;
+* Vidas;
+* Mais inimigos;
+* Níveis;
+* Aumento de dificuldade;
+* Menu inicial;
+* Recorde de pontuação.
+
+**Primeiro faça funcionar. Depois faça ficar incrível!**
+
+## ⭐ OBJETIVO
+
+O objetivo não é criar um jogo profissional.
+
+O objetivo é mostrar que você consegue **transformar uma ideia em um programa funcionando**, utilizando os conhecimentos adquiridos durante o curso.
+
+Ao final, você deverá apresentar seu jogo para a turma e explicar brevemente:
+
+**Qual é o objetivo do jogo? Como ele funciona? O que foi mais difícil? E o que você mais gostou de criar?**

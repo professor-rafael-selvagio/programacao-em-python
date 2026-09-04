@@ -1,0 +1,15 @@
+Boa tarde, pessoal! Tudo bem com vocês? 
+Quem programou em Python depois da última aula? 😂
+
+Chegamos ao final do nosso curso, e todo o material que utilizamos durante essa jornada está disponível para vocês continuarem estudando e revisando sempre que quiserem.
+Vocês podem acessar de duas formas:
+
+💾 Baixar todo o material: https://github.com/professor-rafael-selvagio/programacao-em-python/archive/refs/heads/main.zip
+Baixar curso completo (.ZIP)
+Ideal para guardar todo o conteúdo no computador e estudar offline.
+🌐 Acessar pelo GitHub: https://github.com/professor-rafael-selvagio/programacao-em-python
+Repositório do curso
+Aqui vocês podem consultar os arquivos, códigos, exemplos e materiais diretamente pelo navegador.
+💡 Guardem esse material. Ele pode ser muito útil para revisar os conteúdos e consultar exemplos quando vocês continuarem programando em Python.
+
+🐍 O curso termina, mas o material e o aprendizado continuam com vocês!

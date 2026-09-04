@@ -1,4 +1,0 @@
-{% extends "base.html" %}{% block title %}Responder feedback{% endblock %}
-{% block content %}<section class="card"><span class="eyebrow">{{ sessao['turma'] }}</span><h1>Feedback da turma</h1>
-<div id="aluno-app"><p class="muted">Carregando a pergunta...</p></div></section>
-<script>window.FEEDBACK_CODIGO={{ codigo|tojson }};</script><script src="{{ url_for('static', filename='aluno.js') }}"></script>{% endblock %}

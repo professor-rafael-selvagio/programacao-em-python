@@ -1,11 +1,13 @@
-Atividade Prática: Organizador de Arquivos em Python
+Nesta atividade, vamos utilizar Python para automatizar o envio de e-mails.
 
-Objetivo: Crie um script para organizar arquivos automaticamente por tipo.
+Parte 1 — Envio de e-mail: crie um programa que envie um e-mail utilizando Python. A mensagem deve conter um assunto e um texto simples, simulando um e-mail enviado para outra pessoa.
 
-Instruções:
+Parte 2 — Envio de e-mail com anexo: agora, modifique o programa para enviar um e-mail contendo também um arquivo em anexo. O anexo pode ser um arquivo de texto, imagem, PDF ou outro arquivo de sua escolha.
 
-1. Baixar arquivos: Baixe e descompacte a pasta `Automação 1.0` em seu computador.
-2. Analisar extensões: Identifique as extensões de cada arquivo presente na pasta (ex: `.pdf`, `.png`, `.xlsx`, `.jpg`).
-3. Criar o script: Na raiz da pasta `Automação 1.0`, crie o arquivo `organiza.py`.
-4. Implementar a lógica: Escreva o código Python necessário para mover cada arquivo para sua respectiva pasta de destino.
-* *Exemplo:* Arquivos `.png` e `.jpg` devem ser movidos para a pasta Imagens (criando a pasta caso ela ainda não exista).
+Você pode desenvolver a aplicação utilizando uma das seguintes opções de interface: PySide6, PyQt6, Flet, Dear PyGui, Kivy ou wxPython para aplicações com interface gráfica; ou, se preferir criar uma aplicação acessível pelo navegador, pode utilizar frameworks web como Flask, Bottle, Streamlit, Gradio ou FastAPI. A escolha da biblioteca/framework é livre, desde que o programa possua uma interface para o usuário informar o destinatário, assunto, mensagem e, na segunda etapa, selecionar um arquivo para anexar ao e-mail.  
+
+Ao final, o programa deverá ser capaz de realizar os dois tipos de envio: e-mail simples e e-mail com anexo.
+
+Destinatário: professor.rafael.selvagio@gmail.com
+Assunto: PythonA14T1
+Assunto: PythonA14T2
