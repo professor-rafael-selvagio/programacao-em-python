@@ -3,497 +3,1247 @@ import sys
 import random
 from pathlib import Path
 
-LARGURA = 1000
-ALTURA = 500
-FPS = 60
-CHAO_Y = 400
 
+# ============================================================
+# CONFIGURAÇÕES
+# ============================================================
+
+W, H, FPS, CHAO = 1000, 500, 60, 400
+
+BASE = Path(__file__).resolve().parent
+IMG = BASE / "img"
+SOM = BASE / "som"
+
+
+# FASES
+# quantidade, velocidade, intervalo mínimo, intervalo máximo
 FASES = {
-    1: {"quantidade": 10, "velocidade": 7, "intervalo_min": 1.5, "intervalo_max": 3.0},
-    2: {"quantidade": 15, "velocidade": 9, "intervalo_min": 1.2, "intervalo_max": 2.2},
-    3: {"quantidade": 20, "velocidade": 9, "intervalo_min": 0.8, "intervalo_max": 1.5},
-    4: {"quantidade": 25, "velocidade": 11, "intervalo_min": 0.6, "intervalo_max": 1.2},
-    5: {"quantidade": 30, "velocidade": 13, "intervalo_min": 0.4, "intervalo_max": 0.9}
+    1: (10, 7, 1.5, 3.0),
+    2: (15, 9, 1.2, 2.2),
+    3: (20, 9, 0.8, 1.5),
+    4: (25, 11, 0.6, 1.2),
+    5: (30, 13, 0.4, 0.9)
 }
-TOTAL_FASES = 5
 
-VELOCIDADE_INICIAL = 5
-VELOCIDADE_NUVENS_INICIAL = 3
-FORCA_PULO = -16
-GRAVIDADE = 0.8
-CORACOES_INICIAIS = 3
+
+# ============================================================
+# INICIALIZAÇÃO
+# ============================================================
 
 pygame.init()
 pygame.mixer.init()
-tela = pygame.display.set_mode((LARGURA, ALTURA))
+
+tela = pygame.display.set_mode((W, H))
 pygame.display.set_caption("Aventura Pygame")
-relogio = pygame.time.Clock()
 
-CEU = (235, 245, 255)
-VERDE = (80, 180, 80)
-BRANCO = (255, 255, 255)
-PRETO = (30, 30, 30)
+clock = pygame.time.Clock()
 
-PASTA_PROJETO = Path(__file__).parent
-PASTA_IMAGENS = PASTA_PROJETO / "img"
-PASTA_SONS = PASTA_PROJETO / "som"
 
-# Sons
-som_start = pygame.mixer.Sound(str(PASTA_SONS / "start.mp3"))
-som_jump = pygame.mixer.Sound(str(PASTA_SONS / "jump.mp3"))
-som_dano = pygame.mixer.Sound(str(PASTA_SONS / "damage.mp3"))
-som_gameover = pygame.mixer.Sound(str(PASTA_SONS / "gameover.mp3"))
-som_endgame = pygame.mixer.Sound(str(PASTA_SONS / "end.mp3"))
+# ============================================================
+# RECURSOS
+# ============================================================
 
-# Personagem
-imagem_run = pygame.image.load(str(PASTA_IMAGENS / "run.png")).convert_alpha()
-imagem_jump = pygame.image.load(str(PASTA_IMAGENS / "jump.png")).convert_alpha()
-imagem_down = pygame.image.load(str(PASTA_IMAGENS / "down.png")).convert_alpha()
+def imagem(nome, tamanho):
+    return pygame.transform.scale(
+        pygame.image.load(str(IMG / nome)).convert_alpha(),
+        tamanho
+    )
 
-TAMANHO_PERSONAGEM = (80, 100)
-TAMANHO_DOWN = (80, 56)
 
-imagem_run = pygame.transform.scale(imagem_run, TAMANHO_PERSONAGEM)
-imagem_jump = pygame.transform.scale(imagem_jump, TAMANHO_PERSONAGEM)
-imagem_down = pygame.transform.scale(imagem_down, TAMANHO_DOWN)
+# Jogador
+run = imagem("run.png", (80, 100))
+jump = imagem("jump.png", (80, 100))
+down = imagem("down.png", (80, 56))
+eneas_img = imagem("eneas.png", (80, 100))
 
-# Inimigos
-imagem_arvore = pygame.image.load(str(PASTA_IMAGENS / "tree.png")).convert_alpha()
-imagem_cueca = pygame.image.load(str(PASTA_IMAGENS / "underpants.png")).convert_alpha()
-imagem_ladrao = pygame.image.load(str(PASTA_IMAGENS / "burglar.png")).convert_alpha()
-imagem_careca = pygame.image.load(str(PASTA_IMAGENS / "bald.png")).convert_alpha()
-imagem_aviao = pygame.image.load(str(PASTA_IMAGENS / "plane.png")).convert_alpha()
+# Obstáculos
+arvore = imagem("tree.png", (70, 80))
+cueca = imagem("underpants.png", (70, 80))
+maleta = imagem("briefcase.png", (70, 80))
+ladrao = imagem("burglar.png", (70, 80))
+careca = imagem("bald.png", (70, 80))
 
-TAMANHO_INIMIGO_CHAO = (70, 80)
-TAMANHO_AVIAO = (100, 60)
 
-imagem_arvore = pygame.transform.scale(imagem_arvore, TAMANHO_INIMIGO_CHAO)
-imagem_cueca = pygame.transform.scale(imagem_cueca, TAMANHO_INIMIGO_CHAO)
-imagem_ladrao = pygame.transform.scale(imagem_ladrao, TAMANHO_INIMIGO_CHAO)
-imagem_careca = pygame.transform.scale(imagem_careca, TAMANHO_INIMIGO_CHAO)
-imagem_aviao = pygame.transform.scale(imagem_aviao, TAMANHO_AVIAO)
+# Obstáculo aéreo
+aviao = imagem("plane.png", (100, 60))
 
-inimigos_chao = [imagem_arvore, imagem_cueca, imagem_ladrao, imagem_careca]
+
+# Itens especiais
+constitution = imagem("constitution.png", (55, 55))
+microphone = imagem("microphone.png", (70, 70))
+
 
 # Corações
-TAMANHO_CORACAO = (40, 40)
-imagem_coracao1 = pygame.transform.scale(
-    pygame.image.load(str(PASTA_IMAGENS / "heart1.png")).convert_alpha(),
-    TAMANHO_CORACAO
-)
-imagem_coracao2 = pygame.transform.scale(
-    pygame.image.load(str(PASTA_IMAGENS / "heart2.png")).convert_alpha(),
-    TAMANHO_CORACAO
-)
-imagem_coracao3 = pygame.transform.scale(
-    pygame.image.load(str(PASTA_IMAGENS / "heart3.png")).convert_alpha(),
-    TAMANHO_CORACAO
-)
+coracoes_img = [
+    imagem("heart1.png", (40, 40)),
+    imagem("heart2.png", (40, 40)),
+    imagem("heart3.png", (40, 40))
+]
 
-# Estado do personagem
-personagem_x = 150
-personagem_y = CHAO_Y - TAMANHO_PERSONAGEM[1]
-velocidade_y = 0
+
+# ============================================================
+# SONS
+# ============================================================
+
+som_start = pygame.mixer.Sound(str(SOM / "start.mp3"))
+som_jump = pygame.mixer.Sound(str(SOM / "jump.mp3"))
+som_dano = pygame.mixer.Sound(str(SOM / "damage.mp3"))
+som_gameover = pygame.mixer.Sound(str(SOM / "gameover.mp3"))
+som_end = pygame.mixer.Sound(str(SOM / "end.mp3"))
+som_brasil = pygame.mixer.Sound(str(SOM / "brazil.mp3"))
+eneas = pygame.mixer.Sound(str(SOM / "my-name-is-eneas.mp3"))
+
+
+# ============================================================
+# VARIÁVEIS
+# ============================================================
+
+fase = 1
+
+vidas = 3
+
+# Obstáculos desviados na fase atual
+desviados = 0
+
+# Obstáculos desviados durante todo o jogo
+total_desviados = 0
+
+
+# Próxima Constituição
+proxima_constitution = 10
+
+
+# Próximo microfone
+proximo_microfone = 6
+
+
+# Listas de objetos
+inimigos = []
+constitutions = []
+microphones = []
+
+
+# Jogador
+px, py = 150, CHAO - 100
+
+vel_y = 0
+
 pulando = False
 abaixado = False
 
+
 # Estado do jogo
-velocidade = VELOCIDADE_INICIAL
-velocidade_nuvens = VELOCIDADE_NUVENS_INICIAL
-velocidade_inimigo = FASES[1]["velocidade"]
-
-jogo_iniciado = False
+iniciado = False
 game_over = False
-jogo_finalizado = False
+venceu = False
 
-fase_atual = 1
-inimigos_desviados = 0
-mostrar_fase = False
-tempo_mensagem_fase = 0
 
-coracoes = CORACOES_INICIAIS
+# Controle do som do Brasil
+brasil_tocou = False
+
+
+# Cronômetro
 tempo_inicio = 0
 tempo_final = 0
-tempo_proximo_inimigo = 0
 
-linha1_x = 0
-linha2_x = LARGURA
-nuvem1_x = 150
-nuvem2_x = 600
 
-inimigos = []
+# Próximo inimigo
+proximo_inimigo = 0
 
-def criar_inimigo():
-    tipo = random.choice(["chao", "chao", "chao", "chao", "aviao"])
 
-    if tipo == "chao":
-        imagem = random.choice(inimigos_chao)
-        largura, altura = TAMANHO_INIMIGO_CHAO
-        x = LARGURA + 50
-        y = CHAO_Y - altura
-    else:
-        imagem = imagem_aviao
-        largura, altura = TAMANHO_AVIAO
-        x = LARGURA + 50
-        y = random.choice([170, 210, 250, 290])
+# Mensagem do microfone
+mensagem_microfone = False
+tempo_microfone = 0
+eneas_ativo = False
+tempo_eneas = 0
 
-    inimigos.append({
-        "imagem": imagem,
-        "x": x,
-        "y": y,
-        "largura": largura,
-        "altura": altura
-    })
+
+# Elementos do cenário
+linha1, linha2 = 0, W
+nuvem1, nuvem2 = 150, 600
+
+
+# ============================================================
+# FUNÇÕES
+# ============================================================
 
 def configurar_fase():
-    global velocidade, velocidade_nuvens, velocidade_inimigo
-    global tempo_proximo_inimigo, inimigos_desviados
-    global mostrar_fase, tempo_mensagem_fase
+    """
+    Configura uma nova fase.
+    """
 
-    config = FASES[fase_atual]
+    global desviados
+    global proximo_inimigo
 
-    velocidade = VELOCIDADE_INICIAL + fase_atual - 1
-    velocidade_nuvens = VELOCIDADE_NUVENS_INICIAL + fase_atual - 1
-    velocidade_inimigo = config["velocidade"]
-    inimigos_desviados = 0
+    desviados = 0
+
     inimigos.clear()
+    constitutions.clear()
+    microphones.clear()
 
-    intervalo = random.uniform(
-        config["intervalo_min"],
-        config["intervalo_max"]
+    qtd, vel, mn, mx = FASES[fase]
+
+    proximo_inimigo = pygame.time.get_ticks() + random.randint(
+        int(mn * 1000),
+        int(mx * 1000)
     )
-    tempo_proximo_inimigo = pygame.time.get_ticks() + int(intervalo * 1000)
 
-    mostrar_fase = True
-    tempo_mensagem_fase = pygame.time.get_ticks() + 2000
 
-def desenhar_cenario():
-    tela.fill(CEU)
+# ------------------------------------------------------------
 
-    pygame.draw.circle(tela, (255, 220, 80), (850, 90), 40)
+def criar_inimigo():
+    """
+    Cria um obstáculo aleatório.
+    """
 
-    pygame.draw.ellipse(tela, BRANCO, (nuvem1_x, 80, 100, 35))
-    pygame.draw.ellipse(tela, BRANCO, (nuvem1_x + 40, 65, 90, 50))
+    # 20% de chance de avião
+    if random.random() < 0.2:
 
-    pygame.draw.ellipse(tela, BRANCO, (nuvem2_x, 120, 120, 35))
-    pygame.draw.ellipse(tela, BRANCO, (nuvem2_x + 50, 100, 90, 50))
+        img = aviao
 
-    pygame.draw.rect(tela, VERDE, (0, CHAO_Y, LARGURA, ALTURA - CHAO_Y))
+        w = 100
+        h = 60
 
-    pygame.draw.rect(tela, (50, 130, 50), (linha1_x, CHAO_Y - 5, 150, 5))
-    pygame.draw.rect(tela, (50, 130, 50), (linha2_x, CHAO_Y - 5, 150, 5))
+        y = random.choice([
+            170,
+            210,
+            250,
+            290
+        ])
 
-def desenhar_texto_central(texto, tamanho):
+    else:
+
+        img = random.choice([
+            arvore,
+            cueca,
+            ladrao,
+            careca,
+            maleta
+        ])
+
+        w = 70
+        h = 80
+
+        y = CHAO - h
+
+    inimigos.append([
+        img,
+        W + 50,
+        y,
+        w,
+        h
+    ])
+
+
+# ------------------------------------------------------------
+
+def criar_constitution():
+    """
+    Cria uma Constituição.
+    """
+
+    constitutions.append([
+        constitution,
+        W + 50,
+        CHAO - 55,
+        55,
+        55
+    ])
+
+
+# ------------------------------------------------------------
+
+def criar_microfone():
+    """
+    Cria o microfone especial.
+    """
+
+    microphones.append([
+        microphone,
+        W + 50,
+        CHAO - 70,
+        70,
+        70
+    ])
+
+
+# ------------------------------------------------------------
+
+def texto(msg, tamanho, y, cor=(30, 30, 30)):
+    """
+    Exibe um texto centralizado.
+    """
+
     fonte = pygame.font.Font(None, tamanho)
-    superficie = fonte.render(texto, True, PRETO)
-    retangulo = superficie.get_rect(center=(LARGURA // 2, ALTURA // 2))
-    tela.blit(superficie, retangulo)
 
-def desenhar_coracoes():
-    x_inicial = LARGURA - 145
-    y = 15
-    espacamento = 45
+    img = fonte.render(
+        msg,
+        True,
+        cor
+    )
 
-    if coracoes >= 1:
-        tela.blit(imagem_coracao1, (x_inicial, y))
-    if coracoes >= 2:
-        tela.blit(imagem_coracao2, (x_inicial + espacamento, y))
-    if coracoes >= 3:
-        tela.blit(imagem_coracao3, (x_inicial + espacamento * 2, y))
+    tela.blit(
+        img,
+        img.get_rect(
+            center=(W // 2, y)
+        )
+    )
 
-def reiniciar_jogo():
-    global personagem_y, velocidade_y, pulando, abaixado
-    global jogo_iniciado, game_over, jogo_finalizado, coracoes
-    global tempo_inicio, tempo_final, fase_atual
-    global linha1_x, linha2_x, nuvem1_x, nuvem2_x
 
-    personagem_y = CHAO_Y - TAMANHO_PERSONAGEM[1]
-    velocidade_y = 0
+# ------------------------------------------------------------
+
+def reiniciar():
+
+    global fase
+    global vidas
+    global desviados
+    global total_desviados
+
+    global proxima_constitution
+    global proximo_microfone
+
+    global px
+    global py
+    global vel_y
+
+    global pulando
+    global abaixado
+
+    global iniciado
+    global game_over
+    global venceu
+
+    global brasil_tocou
+
+    global tempo_inicio
+
+    global mensagem_microfone
+    global tempo_microfone
+    
+    global eneas_ativo
+    global tempo_eneas
+
+
+    # Reinicia fases
+    fase = 1
+
+    # Reinicia vidas
+    vidas = 3
+
+    # Reinicia contadores
+    desviados = 0
+    total_desviados = 0
+
+
+    # Próximos itens
+    proxima_constitution = 10
+    proximo_microfone = 6
+
+
+    # Jogador
+    px = 150
+    py = CHAO - 100
+
+    vel_y = 0
+
     pulando = False
     abaixado = False
 
-    jogo_iniciado = True
+
+    # Estado
+    iniciado = True
     game_over = False
-    jogo_finalizado = False
-    coracoes = CORACOES_INICIAIS
+    venceu = False
 
-    fase_atual = 1
+
+    # Som
+    brasil_tocou = False
+
+
+    # Cronômetro
     tempo_inicio = pygame.time.get_ticks()
-    tempo_final = 0
 
-    linha1_x = 0
-    linha2_x = LARGURA
-    nuvem1_x = 150
-    nuvem2_x = 600
+
+    # Mensagem do microfone
+    mensagem_microfone = False
+    tempo_microfone = 0
+    eneas_ativo = False
+    tempo_eneas = 0
+
+
+    # Limpa objetos
+    inimigos.clear()
+    constitutions.clear()
+    microphones.clear()
+
+
+    pygame.mixer.stop()
 
     configurar_fase()
 
+
+# ============================================================
+# CENÁRIO
+# ============================================================
+
+def desenhar_cenario():
+
+    # Céu
+    tela.fill(
+        (235, 245, 255)
+    )
+
+
+    # Sol
+    pygame.draw.circle(
+        tela,
+        (255, 220, 80),
+        (850, 90),
+        40
+    )
+
+
+    # Nuvens
+    for x, y in [
+        (nuvem1, 80),
+        (nuvem2, 120)
+    ]:
+
+        pygame.draw.ellipse(
+            tela,
+            "white",
+            (x, y, 100, 35)
+        )
+
+        pygame.draw.ellipse(
+            tela,
+            "white",
+            (x + 40, y - 15, 90, 50)
+        )
+
+
+    # Chão
+    pygame.draw.rect(
+        tela,
+        (80, 180, 80),
+        (0, CHAO, W, H - CHAO)
+    )
+
+
+    # Marcas no chão
+    for x in (
+        linha1,
+        linha2
+    ):
+
+        pygame.draw.rect(
+            tela,
+            (50, 130, 50),
+            (x, CHAO - 5, 150, 5)
+        )
+
+
+# ============================================================
+# VIDAS
+# ============================================================
+
+def desenhar_vidas():
+
+    for i in range(vidas):
+
+        tela.blit(
+            coracoes_img[i],
+            (W - 145 + i * 45, 15)
+        )
+
+
+# ============================================================
+# TELA DE VITÓRIA
+# ============================================================
+
+def tela_vitoria():
+
+    tela.fill("white")
+
+
+    # Barras verdes
+    pygame.draw.rect(
+        tela,
+        (80, 180, 80),
+        (0, 0, W, 35)
+    )
+
+    pygame.draw.rect(
+        tela,
+        (80, 180, 80),
+        (0, H - 35, W, 35)
+    )
+
+
+    texto(
+        "VOCÊ VENCEU!",
+        90,
+        130,
+        (30, 120, 50)
+    )
+
+
+    texto(
+        "PARABÉNS!",
+        42,
+        205
+    )
+
+
+    texto(
+        "Você completou todas as 5 fases!",
+        30,
+        260
+    )
+
+
+    texto(
+        f"Obstáculos desviados: {total_desviados}",
+        28,
+        305
+    )
+
+
+    texto(
+        f"Corações restantes: {vidas}",
+        28,
+        345
+    )
+
+
+    texto(
+        "ESPAÇO - JOGAR NOVAMENTE    ESC - SAIR",
+        27,
+        425
+    )
+
+
+# ============================================================
+# INÍCIO
+# ============================================================
+
+configurar_fase()
+
+
+# ============================================================
+# LOOP PRINCIPAL
+# ============================================================
+
 while True:
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
+
+    # ========================================================
+    # EVENTOS
+    # ========================================================
+
+    for e in pygame.event.get():
+
+        # Fechar janela
+        if e.type == pygame.QUIT:
+
             pygame.quit()
             sys.exit()
 
-        if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_SPACE:
-                if not jogo_iniciado and not game_over and not jogo_finalizado:
-                    jogo_iniciado = True
-                    tempo_inicio = pygame.time.get_ticks()
-                    tempo_final = 0
-                    fase_atual = 1
+
+        # Teclado
+        if e.type == pygame.KEYDOWN:
+
+            # ESC
+            if e.key == pygame.K_ESCAPE:
+
+                pygame.quit()
+                sys.exit()
+
+
+            # ESPAÇO
+            if e.key == pygame.K_SPACE:
+
+                # Começar / reiniciar
+                if (
+                    not iniciado
+                    or game_over
+                    or venceu
+                ):
+
+                    reiniciar()
+
                     som_start.play()
-                    configurar_fase()
 
-                elif game_over or jogo_finalizado:
-                    reiniciar_jogo()
 
-                elif not pulando and not abaixado:
-                    velocidade_y = FORCA_PULO
+                # Pular
+                elif (
+                    not pulando
+                    and not abaixado
+                ):
+
+                    vel_y = -16
+
                     pulando = True
+
                     som_jump.play()
 
-            elif evento.key == pygame.K_DOWN:
-                if (
-                    jogo_iniciado
-                    and not game_over
-                    and not jogo_finalizado
-                    and not pulando
-                ):
-                    abaixado = True
 
-        if evento.type == pygame.KEYUP and evento.key == pygame.K_DOWN:
+            # Abaixar
+            if (
+                e.key == pygame.K_DOWN
+                and not pulando
+            ):
+
+                abaixado = True
+
+
+        # Soltar tecla
+        if (
+            e.type == pygame.KEYUP
+            and e.key == pygame.K_DOWN
+        ):
+
             abaixado = False
 
-    if jogo_iniciado and not game_over and not jogo_finalizado:
-        tempo_decorrido = (pygame.time.get_ticks() - tempo_inicio) / 1000
 
-        # Pulo
+    # ========================================================
+    # JOGO
+    # ========================================================
+
+    if (
+        iniciado
+        and not game_over
+        and not venceu
+    ):
+
+        agora = pygame.time.get_ticks()
+
+
+        # ----------------------------------------------------
+        # TEMPO
+        # ----------------------------------------------------
+
+        tempo = (
+            agora - tempo_inicio
+        ) / 1000
+
+
+        # ----------------------------------------------------
+        # PULO
+        # ----------------------------------------------------
+
         if pulando:
-            velocidade_y += GRAVIDADE
-            personagem_y += velocidade_y
 
-            if personagem_y >= CHAO_Y - TAMANHO_PERSONAGEM[1]:
-                personagem_y = CHAO_Y - TAMANHO_PERSONAGEM[1]
-                velocidade_y = 0
+            vel_y += 0.8
+
+            py += vel_y
+
+
+            if py >= CHAO - 100:
+
+                py = CHAO - 100
+
+                vel_y = 0
+
                 pulando = False
 
-        # Chão
-        linha1_x -= velocidade
-        linha2_x -= velocidade
 
-        if linha1_x < -150:
-            linha1_x = LARGURA
-        if linha2_x < -150:
-            linha2_x = LARGURA
+        # ----------------------------------------------------
+        # CENÁRIO
+        # ----------------------------------------------------
 
-        # Nuvens
-        nuvem1_x -= velocidade_nuvens
-        nuvem2_x -= velocidade_nuvens
+        vel = FASES[fase][1]
 
-        if nuvem1_x < -150:
-            nuvem1_x = LARGURA + 100
-        if nuvem2_x < -150:
-            nuvem2_x = LARGURA + 100
 
-        # Criar inimigos
-        tempo_atual_ms = pygame.time.get_ticks()
+        linha1 -= vel
+        linha2 -= vel
 
-        if tempo_atual_ms >= tempo_proximo_inimigo:
-            if inimigos_desviados < FASES[fase_atual]["quantidade"]:
-                criar_inimigo()
 
-                intervalo = random.uniform(
-                    FASES[fase_atual]["intervalo_min"],
-                    FASES[fase_atual]["intervalo_max"]
+        nuvem1 -= 3
+        nuvem2 -= 3
+
+
+        if linha1 < -150:
+            linha1 = W
+
+
+        if linha2 < -150:
+            linha2 = W
+
+
+        if nuvem1 < -150:
+            nuvem1 = W + 100
+
+
+        if nuvem2 < -150:
+            nuvem2 = W + 100
+
+
+        # ----------------------------------------------------
+        # CRIAR INIMIGO
+        # ----------------------------------------------------
+
+        qtd, vel_inimigo, mn, mx = FASES[fase]
+
+
+        if (
+            agora >= proximo_inimigo
+            and desviados < qtd
+        ):
+
+            criar_inimigo()
+
+
+            proximo_inimigo = (
+                agora
+                + random.randint(
+                    int(mn * 1000),
+                    int(mx * 1000)
                 )
-                tempo_proximo_inimigo = tempo_atual_ms + int(intervalo * 1000)
+            )
 
-        # Movimento dos inimigos
-        for inimigo in inimigos:
-            inimigo["x"] -= velocidade_inimigo
 
-        # Hitbox
+        # ----------------------------------------------------
+        # MOVIMENTAR INIMIGOS
+        # ----------------------------------------------------
+
+        for i in inimigos:
+
+            i[1] -= vel_inimigo
+
+
+        # ----------------------------------------------------
+        # MOVIMENTAR CONSTITUIÇÕES
+        # ----------------------------------------------------
+
+        for c in constitutions:
+
+            c[1] -= vel_inimigo
+
+
+        # ----------------------------------------------------
+        # MOVIMENTAR MICROFONES
+        # ----------------------------------------------------
+
+        for m in microphones:
+
+            m[1] -= vel_inimigo
+
+
+        # ----------------------------------------------------
+        # HITBOX DO JOGADOR
+        # ----------------------------------------------------
+
         if abaixado:
-            personagem_rect = pygame.Rect(
-                personagem_x + 10, personagem_y + 45, 60, 55
+
+            player = pygame.Rect(
+                px + 10,
+                py + 45,
+                60,
+                50
             )
+
         else:
-            personagem_rect = pygame.Rect(
-                personagem_x + 15,
-                personagem_y + 10,
-                TAMANHO_PERSONAGEM[0] - 30,
-                TAMANHO_PERSONAGEM[1] - 15
+
+            player = pygame.Rect(
+                px + 15,
+                py + 10,
+                50,
+                85
             )
 
-        # Colisão
-        inimigos_para_remover = []
 
-        for inimigo in inimigos:
-            inimigo_rect = pygame.Rect(
-                inimigo["x"],
-                inimigo["y"],
-                inimigo["largura"],
-                inimigo["altura"]
+        # ====================================================
+        # COLISÃO COM INIMIGOS
+        # ====================================================
+
+        removidos = []
+
+
+        for i in inimigos:
+
+            rect = pygame.Rect(
+                i[1],
+                i[2],
+                i[3],
+                i[4]
             )
 
-            if personagem_rect.colliderect(inimigo_rect):
-                coracoes -= 1
-                inimigos_para_remover.append(inimigo)
+
+            if player.colliderect(rect):
+
+                vidas -= 1
+
+                removidos.append(i)
+
                 som_dano.play()
 
-                if coracoes <= 0:
-                    coracoes = 0
-                    tempo_final = tempo_decorrido
+
+                # GAME OVER
+                if vidas <= 0:
+
+                    vidas = 0
+
                     game_over = True
-                    abaixado = False
+
+                    tempo_final = tempo
+
                     som_gameover.play()
-                    break
 
-        for inimigo in inimigos_para_remover:
-            if inimigo in inimigos:
-                inimigos.remove(inimigo)
 
-        # Contar inimigos desviados
-        inimigos_fora = []
+        # Remove inimigos que bateram
+        for i in removidos:
 
-        for inimigo in inimigos:
-            if inimigo["x"] <= -inimigo["largura"]:
-                inimigos_fora.append(inimigo)
+            if i in inimigos:
 
-        for inimigo in inimigos_fora:
-            if inimigo in inimigos:
-                inimigos.remove(inimigo)
-                inimigos_desviados += 1
+                inimigos.remove(i)
 
-        # Verificar fase
-        quantidade_fase = FASES[fase_atual]["quantidade"]
 
-        if inimigos_desviados >= quantidade_fase and len(inimigos) == 0:
-            if fase_atual >= TOTAL_FASES:
-                jogo_finalizado = True
-                jogo_iniciado = True
-                tempo_final = tempo_decorrido
-                som_endgame.play()
+        # ====================================================
+        # OBSTÁCULOS DESVIADOS
+        # ====================================================
+
+        for i in inimigos[:]:
+
+            if i[1] < -i[3]:
+
+                inimigos.remove(i)
+
+
+                # Conta obstáculo
+                desviados += 1
+
+                total_desviados += 1
+
+
+                # ------------------------------------------------
+                # CONSTITUIÇÃO
+                # ------------------------------------------------
+
+                if (
+                    total_desviados
+                    >= proxima_constitution
+                ):
+
+                    criar_constitution()
+
+                    proxima_constitution += 10
+
+
+                # ------------------------------------------------
+                # MICROFONE
+                # ------------------------------------------------
+
+                if (
+                    total_desviados
+                    >= proximo_microfone
+                ):
+
+                    criar_microfone()
+
+                    proximo_microfone += 6
+
+
+        # ====================================================
+        # CONSTITUIÇÃO
+        # ====================================================
+
+        for c in constitutions[:]:
+
+            rect = pygame.Rect(
+                c[1],
+                c[2],
+                c[3],
+                c[4]
+            )
+
+
+            # Pegou Constituição
+            if player.colliderect(rect):
+
+                if vidas < 3:
+
+                    vidas += 1
+
+
+                constitutions.remove(c)
+
+
+            # Saiu da tela
+            elif c[1] < -c[3]:
+
+                constitutions.remove(c)
+
+
+        # ====================================================
+        # MICROFONE
+        # ====================================================
+
+        for m in microphones[:]:
+
+            rect = pygame.Rect(
+                m[1],
+                m[2],
+                m[3],
+                m[4]
+            )
+
+
+            # Pegou o microfone
+            if player.colliderect(rect):
+                microphones.remove(m)
+
+                # Ativa mensagem
+                mensagem_microfone = True
+
+                tempo_microfone = pygame.time.get_ticks()
+
+                # Ativa sprite do Enéas
+                eneas_ativo = True
+
+                tempo_eneas = pygame.time.get_ticks()
+
+                # Toca o áudio uma única vez
+                eneas.play()
+
+            # Saiu da tela
+            elif m[1] < -m[3]:
+
+                microphones.remove(m)
+
+
+        # ====================================================
+        # PRÓXIMA FASE
+        # ====================================================
+
+        if (
+            desviados >= qtd
+            and not inimigos
+        ):
+
+            # Última fase
+            if fase == 5:
+
+                venceu = True
+
+                tempo_final = tempo
+
+                som_end.play()
+
+
+                # Toca Brasil apenas uma vez
+                if not brasil_tocou:
+
+                    som_brasil.play()
+
+                    brasil_tocou = True
+
+
+            # Próxima fase
             else:
-                fase_atual += 1
+
+                fase += 1
+
                 configurar_fase()
 
-    # Desenhar
-    desenhar_cenario()
 
-    for inimigo in inimigos:
-        tela.blit(inimigo["imagem"], (inimigo["x"], inimigo["y"]))
+    # ========================================================
+    # DESENHO
+    # ========================================================
 
-    if pulando:
-        imagem_atual = imagem_jump
-        posicao_personagem_y = personagem_y
-    elif abaixado:
-        imagem_atual = imagem_down
-        posicao_personagem_y = personagem_y + 44
+    if venceu:
+
+        tela_vitoria()
+
+
     else:
-        imagem_atual = imagem_run
-        posicao_personagem_y = personagem_y
 
-    tela.blit(imagem_atual, (personagem_x, posicao_personagem_y))
+        # ----------------------------------------------------
+        # CENÁRIO
+        # ----------------------------------------------------
 
-    # Tela inicial
-    if not jogo_iniciado and not game_over and not jogo_finalizado:
-        desenhar_texto_central("APERTE ESPAÇO PARA COMEÇAR", 40)
+        desenhar_cenario()
 
-    # Fase
-    if mostrar_fase:
-        if pygame.time.get_ticks() >= tempo_mensagem_fase:
-            mostrar_fase = False
-        else:
-            fonte_fase = pygame.font.Font(None, 60)
-            texto_fase = fonte_fase.render(f"FASE {fase_atual}", True, PRETO)
-            retangulo_fase = texto_fase.get_rect(
-                center=(LARGURA // 2, ALTURA // 2)
+
+        # ----------------------------------------------------
+        # INIMIGOS
+        # ----------------------------------------------------
+
+        for i in inimigos:
+
+            tela.blit(
+                i[0],
+                (i[1], i[2])
             )
-            tela.blit(texto_fase, retangulo_fase)
 
-    # Game Over
-    if game_over:
-        desenhar_texto_central("GAME OVER", 60)
 
-        fonte_game_over = pygame.font.Font(None, 30)
-        texto_reiniciar = fonte_game_over.render(
-            "APERTE ESPAÇO PARA JOGAR NOVAMENTE",
-            True,
-            PRETO
-        )
-        retangulo_reiniciar = texto_reiniciar.get_rect(
-            center=(LARGURA // 2, ALTURA // 2 + 60)
-        )
-        tela.blit(texto_reiniciar, retangulo_reiniciar)
+        # ----------------------------------------------------
+        # CONSTITUIÇÕES
+        # ----------------------------------------------------
 
-    # Vitória
-    if jogo_finalizado:
-        desenhar_texto_central("PARABÉNS!", 60)
+        for c in constitutions:
 
-        fonte_final = pygame.font.Font(None, 30)
+            tela.blit(
+                c[0],
+                (c[1], c[2])
+            )
 
-        texto_final = fonte_final.render(
-            "VOCÊ COMPLETOU TODAS AS 5 FASES!",
-            True,
-            PRETO
-        )
-        retangulo_final = texto_final.get_rect(
-            center=(LARGURA // 2, ALTURA // 2 + 50)
-        )
-        tela.blit(texto_final, retangulo_final)
 
-        texto_novo_jogo = fonte_final.render(
-            "APERTE ESPAÇO PARA JOGAR NOVAMENTE",
-            True,
-            PRETO
-        )
-        retangulo_novo_jogo = texto_novo_jogo.get_rect(
-            center=(LARGURA // 2, ALTURA // 2 + 90)
-        )
-        tela.blit(texto_novo_jogo, retangulo_novo_jogo)
+        # ----------------------------------------------------
+        # MICROFONES
+        # ----------------------------------------------------
 
-    # Informações
-    fonte = pygame.font.Font(None, 28)
+        for m in microphones:
 
-    texto_velocidade = fonte.render(
-        f"Velocidade: {velocidade_inimigo}",
-        True,
-        PRETO
-    )
-    tela.blit(texto_velocidade, (20, 20))
+            tela.blit(
+                m[0],
+                (m[1], m[2])
+            )
 
-    if jogo_iniciado:
-        if game_over or jogo_finalizado:
-            tempo_atual = tempo_final
+
+        # ----------------------------------------------------
+        # JOGADOR
+        # ----------------------------------------------------
+
+        if eneas_ativo:
+            # Sprite do Enéas durante o áudio
+            img = eneas_img
+            y = py
+
+        elif pulando:
+            img = jump
+            y = py
+
+        elif abaixado:
+            img = down
+            y = py + 44
+
         else:
-            tempo_atual = (pygame.time.get_ticks() - tempo_inicio) / 1000
-    else:
-        tempo_atual = 0
+            img = run
+            y = py
 
-    texto_tempo = fonte.render(
-        f"Tempo: {int(tempo_atual)}s",
-        True,
-        PRETO
-    )
-    tela.blit(texto_tempo, (20, 50))
 
-    texto_fase_info = fonte.render(
-        f"Fase: {fase_atual}",
-        True,
-        PRETO
-    )
-    tela.blit(texto_fase_info, (20, 80))
+        tela.blit(
+            img,
+            (px, y)
+        )
 
-    quantidade_fase = FASES[fase_atual]["quantidade"]
-    texto_inimigos = fonte.render(
-        f"Inimigos: {inimigos_desviados}/{quantidade_fase}",
-        True,
-        PRETO
-    )
-    tela.blit(texto_inimigos, (20, 110))
 
-    desenhar_coracoes()
+        # ====================================================
+        # HUD
+        # ====================================================
+
+        fonte = pygame.font.Font(
+            None,
+            28
+        )
+
+
+        # Fase
+        tela.blit(
+            fonte.render(
+                f"Fase: {fase}",
+                True,
+                (30, 30, 30)
+            ),
+            (20, 20)
+        )
+
+
+        # Obstáculos da fase
+        tela.blit(
+            fonte.render(
+                f"Obstáculos: {desviados}/{FASES[fase][0]}",
+                True,
+                (30, 30, 30)
+            ),
+            (20, 50)
+        )
+
+
+        # Total
+        tela.blit(
+            fonte.render(
+                f"Total: {total_desviados}",
+                True,
+                (30, 30, 30)
+            ),
+            (20, 80)
+        )
+
+
+        # Constituição
+        tela.blit(
+            fonte.render(
+                f"Constituição: {proxima_constitution - total_desviados}",
+                True,
+                (30, 30, 30)
+            ),
+            (20, 110)
+        )
+
+
+        # Vidas
+        desenhar_vidas()
+
+
+        # ====================================================
+        # TELA INICIAL
+        # ====================================================
+
+        if not iniciado:
+
+            texto(
+                "A AVENTURA DO POLÍTICO HONESTO",
+                48,
+                90,
+                (30, 100, 50)
+            )
+
+
+            texto(
+                "Você é um político honesto tentando sobreviver à vida pública!",
+                28,
+                155
+            )
+
+
+            texto(
+                "Desvie de ladrões, carecas e perigos da corrupção.",
+                26,
+                195
+            )
+
+
+            texto(
+                "Cuidado também com aviões em pane!",
+                26,
+                230
+            )
+
+
+            texto(
+                "Use a Constituição para recuperar seus corações.",
+                26,
+                265,
+                (40, 80, 150)
+            )
+
+
+            texto(
+                "Será que você consegue chegar ao final do mandato sem se corromper?",
+                27,
+                315,
+                (30, 30, 30)
+            )
+
+
+            texto(
+                "ESPAÇO - COMEÇAR",
+                38,
+                390,
+                (200, 80, 40)
+            )
+
+
+        # ====================================================
+        # GAME OVER
+        # ====================================================
+
+        if game_over:
+
+            camada = pygame.Surface(
+                (W, H),
+                pygame.SRCALPHA
+            )
+
+            camada.fill(
+                (255, 255, 255, 190)
+            )
+
+            tela.blit(
+                camada,
+                (0, 0)
+            )
+
+
+            texto(
+                "GAME OVER",
+                80,
+                220,
+                (200, 40, 40)
+            )
+
+
+            texto(
+                "ESPAÇO - JOGAR NOVAMENTE",
+                30,
+                290
+            )
+
+        # ====================================================
+        # TEMPO DO ENÉAS
+        # ====================================================
+
+        if eneas_ativo:
+
+            if pygame.time.get_ticks() - tempo_eneas >= 3000:
+
+                eneas_ativo = False
+
+        # ====================================================
+        # MENSAGEM DO MICROFONE
+        # ====================================================
+
+        if mensagem_microfone:
+
+            tempo_mensagem = (
+                pygame.time.get_ticks()
+                - tempo_microfone
+            )
+
+
+            # Mensagem fica 1.5 segundos
+            if tempo_mensagem < 1500:
+                
+                camada = pygame.Surface(
+                    (W, H),
+                    pygame.SRCALPHA
+                )
+
+                camada.fill(
+                    (255, 255, 255, 210)
+                )
+
+                tela.blit(
+                    camada,
+                    (0, 0)
+                )
+
+
+                texto(
+                    "MEU NOME É ENÉAS",
+                    72,
+                    210,
+                    (30, 30, 30)
+                )
+
+
+                texto(
+                    "🎤",
+                    50,
+                    280
+                )
+
+
+            else:
+
+                mensagem_microfone = False
+
+
+    # ========================================================
+    # ATUALIZA TELA
+    # ========================================================
 
     pygame.display.flip()
-    relogio.tick(FPS)
+
+    clock.tick(FPS)
